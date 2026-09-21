@@ -42,7 +42,7 @@ body {
   background: var(--bg);
   color: var(--text);
   overflow-x: hidden;
-  padding-bottom: 110px;
+  padding-bottom: 116px;
   transition: var(--transition);
 }
 
@@ -110,11 +110,14 @@ header {
 .btn-ui:hover { background: rgba(255,255,255,0.1); color: var(--green); }
 .btn-ui svg { width: 22px; height: 22px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
 .btn-main-play {
-  width: 48px; height: 48px; border-radius: 50%;
-  background: var(--green); color: #000;
+  width: 52px; height: 52px; border-radius: 50%;
+  background: #fff; color: #000;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.45), 0 0 0 0 rgba(34,197,94,0.5);
+  transition: transform .2s cubic-bezier(.4,0,.2,1), box-shadow .3s, background .2s;
 }
-.btn-main-play:hover { background: #16a34a; color: #000; transform: scale(1.05); }
-.btn-main-play svg { width: 22px; height: 22px; fill: #000; stroke: #000; }
+.btn-main-play:hover { background: #fff; color: #000; transform: scale(1.08); box-shadow: 0 8px 22px rgba(0,0,0,0.55), 0 0 0 6px rgba(34,197,94,0.15); }
+.btn-main-play:active { transform: scale(0.96); }
+.btn-main-play svg { width: 26px; height: 26px; fill: #000; stroke: #000; }
 
 .app-main {
   display: grid;
@@ -186,37 +189,130 @@ header {
 .play-btn-float svg { width: 20px; height: 20px; fill: #000; }
 .track-card:hover .play-btn-float { opacity: 1; transform: translateY(0); }
 
+/* ===== YouTube Music style player bar ===== */
 .player-bar {
   position: fixed;
   bottom: 0; left: 0; right: 0;
-  height: 90px;
-  background: rgba(10,12,10,0.98);
-  backdrop-filter: blur(25px);
-  border-top: 1px solid var(--border);
-  padding: 12px 24px;
+  height: 96px;
+  background: linear-gradient(180deg, rgba(12,14,12,0.98) 0%, rgba(0,0,0,0.99) 100%);
+  backdrop-filter: blur(30px) saturate(140%);
+  -webkit-backdrop-filter: blur(30px) saturate(140%);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 0 24px;
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: minmax(220px, 1fr) minmax(400px, 2fr) minmax(220px, 1fr);
   align-items: center;
-  gap: 20px;
+  gap: 24px;
   z-index: 999;
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.6);
 }
-.track-info { display: flex; align-items: center; gap: 12px; min-width: 0; }
-.track-thumb { width: 56px; height: 56px; border-radius: 6px; object-fit: cover; }
-.track-text { min-width: 0; }
-.track-text h4 { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.track-text p { font-size: 12px; color: var(--muted); }
+body.light-mode .player-bar {
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), #fff);
+  border-top: 1px solid rgba(0,0,0,0.06);
+}
 
-.controls-container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-.action-btns { display: flex; align-items: center; gap: 12px; }
-.progress-wrapper { display: flex; align-items: center; gap: 10px; width: 100%; max-width: 600px; }
-.time-text { font-size: 11px; color: var(--muted); min-width: 32px; text-align: center; }
-.progress-rail { flex: 1; height: 4px; background: rgba(255,255,255,0.15); border-radius: 2px; cursor: pointer; overflow: hidden; }
-.progress-bar { height: 100%; background: var(--green); width: 0%; }
+.track-info { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.track-thumb {
+  width: 60px; height: 60px; border-radius: 8px; object-fit: cover;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.5);
+  transition: transform .3s cubic-bezier(.4,0,.2,1);
+  cursor: pointer;
+}
+.track-thumb:hover { transform: scale(1.04); }
+.track-text { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.track-text h4 {
+  font-size: 14px; font-weight: 600; letter-spacing: -0.1px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  color: var(--text);
+}
+.track-text p {
+  font-size: 12px; color: var(--muted); font-weight: 500;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  transition: color .2s;
+  cursor: pointer;
+}
+.track-text p:hover { color: var(--text); text-decoration: underline; }
 
-.side-controls { display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
-.volume-group { display: flex; align-items: center; gap: 8px; }
-.volume-rail { width: 100px; height: 4px; background: rgba(255,255,255,0.15); border-radius: 2px; cursor: pointer; overflow: hidden; }
-.volume-bar { height: 100%; background: var(--green); width: 80%; }
+.controls-container { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 100%; }
+.action-btns { display: flex; align-items: center; gap: 8px; }
+.action-btns .btn-ui { width: 36px; height: 36px; padding: 0; opacity: 0.9; }
+.action-btns .btn-ui svg { width: 20px; height: 20px; }
+.action-btns .btn-ui:hover { opacity: 1; background: rgba(255,255,255,0.08); color: var(--text); }
+.action-btns .btn-ui.active-toggle { color: var(--green); opacity: 1; }
+.action-btns .btn-ui.active-toggle::after {
+  content: ""; position: absolute; width: 4px; height: 4px; border-radius: 50%;
+  background: var(--green); margin-top: 26px; box-shadow: 0 0 6px var(--green);
+}
+.action-btns .btn-ui { position: relative; }
+
+.progress-wrapper { display: flex; align-items: center; gap: 12px; width: 100%; max-width: 640px; }
+.time-text {
+  font-size: 11px; color: var(--muted); font-weight: 500;
+  min-width: 40px; text-align: center; font-variant-numeric: tabular-nums;
+}
+.progress-rail {
+  flex: 1; height: 4px;
+  background: rgba(255,255,255,0.18);
+  border-radius: 999px; cursor: pointer;
+  position: relative; overflow: visible;
+  transition: height .18s cubic-bezier(.4,0,.2,1);
+}
+.progress-rail:hover { height: 6px; }
+.progress-bar {
+  height: 100%; background: var(--green);
+  width: 0%; border-radius: 999px;
+  position: relative;
+  transition: background .2s;
+}
+.progress-bar::after {
+  content: ""; position: absolute;
+  right: -6px; top: 50%;
+  width: 13px; height: 13px; border-radius: 50%;
+  background: var(--green);
+  transform: translateY(-50%) scale(0);
+  transition: transform .18s cubic-bezier(.4,0,.2,1);
+  box-shadow: 0 0 10px rgba(34,197,94,0.6);
+  pointer-events: none;
+}
+.progress-rail:hover .progress-bar::after { transform: translateY(-50%) scale(1); }
+
+.side-controls { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
+.side-controls .btn-ui { width: 36px; height: 36px; padding: 0; opacity: 0.85; }
+.side-controls .btn-ui:hover { opacity: 1; background: rgba(255,255,255,0.08); color: var(--text); }
+.side-controls .btn-ui svg { width: 20px; height: 20px; }
+
+.volume-group {
+  display: flex; align-items: center; gap: 6px;
+  padding: 0 6px; border-radius: 20px;
+  transition: background .2s;
+}
+.volume-group:hover { background: rgba(255,255,255,0.05); }
+.volume-rail {
+  width: 100px; height: 4px;
+  background: rgba(255,255,255,0.18);
+  border-radius: 999px; cursor: pointer;
+  position: relative; overflow: visible;
+  transition: height .15s;
+}
+.volume-rail:hover { height: 5px; }
+.volume-bar {
+  height: 100%; background: var(--text);
+  width: 80%; border-radius: 999px;
+  position: relative;
+}
+.volume-rail:hover .volume-bar { background: var(--green); }
+.volume-rail::after {
+  content: ""; position: absolute; top: 50%; left: 80%;
+  width: 11px; height: 11px; border-radius: 50%;
+  background: #fff;
+  transform: translate(-50%,-50%) scale(0);
+  transition: transform .15s;
+  pointer-events: none;
+}
+.volume-rail:hover::after { transform: translate(-50%,-50%) scale(1); }
+
+#pLike { transition: transform .2s, color .2s; }
+#pLike:hover { transform: scale(1.15); }
 
 #visualizer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: 0.25; }
 
@@ -454,9 +550,348 @@ header {
   .admin-body { grid-template-columns: 1fr; }
   .admin-body:not(.collapsed) .admin-side { border: none; padding-bottom: 12px; border-bottom: 1px solid rgba(34,197,94,0.15); margin-bottom: 12px; }
 }
+
+/* ================== FULLSCREEN PLAYER ================== */
+.fs-player {
+  position: fixed; inset: 0;
+  z-index: 4000;
+  display: none;
+  overflow: hidden;
+  background: #000;
+  color: #fff;
+  animation: fsIn .4s cubic-bezier(.4,0,.2,1);
+}
+.fs-player.active { display: block; }
+@keyframes fsIn { from { opacity: 0; transform: scale(.98); } to { opacity: 1; transform: scale(1); } }
+
+.fs-bg {
+  position: absolute; inset: -40px;
+  background-size: cover; background-position: center;
+  filter: blur(60px) saturate(1.4) brightness(.35);
+  transform: scale(1.15);
+  z-index: 0;
+  transition: background-image .5s;
+}
+.fs-veil {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(1200px 600px at 20% 10%, rgba(34,197,94,0.25), transparent 60%),
+    radial-gradient(900px 500px at 90% 90%, rgba(34,197,94,0.18), transparent 65%),
+    linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.85) 80%);
+  z-index: 1;
+}
+
+.fs-shell {
+  position: relative; z-index: 2;
+  height: 100%; display: grid;
+  grid-template-rows: 64px 1fr auto;
+  padding: 20px 40px 32px;
+}
+
+.fs-top {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.fs-brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -.5px; }
+.fs-brand .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green); box-shadow: 0 0 12px var(--green); }
+.fs-top .fs-actions { display: flex; gap: 6px; }
+.fs-icon-btn {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
+  color: #fff; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: var(--transition);
+}
+.fs-icon-btn:hover { background: var(--green); color: #000; border-color: var(--green); box-shadow: 0 0 24px var(--green-glow); }
+.fs-icon-btn svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; fill: none; }
+.fs-icon-btn.active { background: var(--green); color: #000; border-color: var(--green); }
+
+.fs-body {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 40px;
+  min-height: 0;
+  align-items: center;
+}
+
+.fs-stage {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 24px; min-height: 0;
+}
+.fs-cover-wrap {
+  position: relative; width: min(46vh, 420px); aspect-ratio: 1;
+  border-radius: 20px; overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(34,197,94,0.25), 0 0 60px rgba(34,197,94,0.25);
+  transition: transform .4s cubic-bezier(.4,0,.2,1);
+}
+.fs-cover-wrap.playing { animation: fsPulse 3.5s ease-in-out infinite; }
+@keyframes fsPulse {
+  0%, 100% { box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(34,197,94,0.3), 0 0 60px rgba(34,197,94,0.25); }
+  50% { box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(34,197,94,0.6), 0 0 100px rgba(34,197,94,0.55); }
+}
+.fs-cover { width: 100%; height: 100%; object-fit: cover; display: block; }
+.fs-vinyl {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: radial-gradient(circle at center, transparent 20%, rgba(0,0,0,0.5) 21%, rgba(0,0,0,0.6) 100%);
+  opacity: 0; transition: opacity .4s;
+}
+
+.fs-meta { text-align: center; max-width: 640px; }
+.fs-title {
+  font-size: clamp(28px, 3.4vw, 44px);
+  font-weight: 800; letter-spacing: -1px; line-height: 1.1;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, #fff, #86efac);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+.fs-artist { font-size: 16px; color: #bbb; font-weight: 500; }
+
+.fs-progress-wrap {
+  width: 100%; max-width: 720px; display: flex; align-items: center; gap: 12px;
+}
+.fs-progress {
+  flex: 1; height: 6px; background: rgba(255,255,255,0.14);
+  border-radius: 999px; cursor: pointer; overflow: visible; position: relative;
+  transition: height .18s;
+}
+.fs-progress:hover { height: 9px; }
+.fs-progress-bar { height: 100%; background: linear-gradient(90deg, var(--green), #86efac); border-radius: 999px; width: 0%; position: relative; }
+.fs-progress-bar::after {
+  content: ""; position: absolute; right: -8px; top: 50%;
+  width: 16px; height: 16px; border-radius: 50%; background: var(--green);
+  transform: translateY(-50%) scale(0); transition: transform .18s;
+  box-shadow: 0 0 14px var(--green);
+}
+.fs-progress:hover .fs-progress-bar::after { transform: translateY(-50%) scale(1); }
+.fs-time { font-size: 12px; color: #bbb; min-width: 44px; text-align: center; font-variant-numeric: tabular-nums; }
+
+.fs-controls {
+  display: flex; align-items: center; justify-content: center; gap: 18px;
+}
+.fs-ctrl {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: transparent; border: none; color: #fff; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: var(--transition);
+}
+.fs-ctrl:hover { background: rgba(255,255,255,0.08); color: var(--green); }
+.fs-ctrl.on { color: var(--green); }
+.fs-ctrl svg { width: 22px; height: 22px; stroke: currentColor; stroke-width: 2; fill: none; }
+.fs-play {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: var(--green); color: #000;
+  box-shadow: 0 12px 40px rgba(34,197,94,0.5);
+  transition: transform .2s, box-shadow .3s;
+}
+.fs-play:hover { background: var(--green); color: #000; transform: scale(1.06); box-shadow: 0 14px 50px rgba(34,197,94,0.7); }
+.fs-play svg { width: 32px; height: 32px; fill: #000; stroke: #000; }
+
+.fs-extra { display: flex; align-items: center; justify-content: center; gap: 20px; margin-top: 4px; flex-wrap: wrap; }
+.fs-extra .fs-icon-btn { width: 42px; height: 42px; }
+.fs-vol-wrap { display: flex; align-items: center; gap: 8px; padding: 6px 12px; background: rgba(255,255,255,0.05); border-radius: 24px; }
+.fs-vol { width: 120px; height: 5px; background: rgba(255,255,255,0.18); border-radius: 999px; cursor: pointer; position: relative; }
+.fs-vol-bar { height: 100%; background: var(--green); border-radius: 999px; width: 80%; }
+
+/* Right side panel: queue / lyrics / visualizer */
+.fs-side {
+  height: 100%; max-height: 70vh;
+  background: rgba(10,14,10,0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(34,197,94,0.2);
+  border-radius: 20px;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.fs-tabs {
+  display: flex; gap: 4px; padding: 10px; border-bottom: 1px solid rgba(34,197,94,0.15);
+}
+.fs-tab {
+  flex: 1; padding: 10px; background: transparent; border: none;
+  color: #aaa; font-size: 12px; font-weight: 700; cursor: pointer;
+  border-radius: 10px; text-transform: uppercase; letter-spacing: .5px;
+  transition: var(--transition);
+}
+.fs-tab:hover { color: #fff; background: rgba(255,255,255,0.04); }
+.fs-tab.active { background: var(--green); color: #000; box-shadow: 0 0 20px var(--green-glow); }
+.fs-panels { flex: 1; overflow-y: auto; padding: 12px; }
+.fs-panel { display: none; }
+.fs-panel.active { display: block; }
+
+.fs-queue-item {
+  display: grid; grid-template-columns: 40px 1fr auto; gap: 12px;
+  align-items: center; padding: 8px 10px;
+  border-radius: 10px; cursor: pointer;
+  transition: var(--transition);
+  margin-bottom: 4px;
+}
+.fs-queue-item:hover { background: rgba(34,197,94,0.08); }
+.fs-queue-item.current { background: rgba(34,197,94,0.16); box-shadow: inset 3px 0 0 var(--green); }
+.fs-queue-item img { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; }
+.fs-queue-item .qtitle { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fs-queue-item .qart { font-size: 11px; color: #999; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fs-queue-item .qtime { font-size: 11px; color: #666; font-variant-numeric: tabular-nums; }
+
+.fs-lyrics-panel {
+  font-size: 15px; line-height: 1.9; color: #ddd; text-align: center;
+  padding: 20px 10px;
+}
+.fs-lyrics-panel .placeholder { color: #666; font-style: italic; }
+
+#fsViz { width: 100%; height: 220px; background: #000; border-radius: 12px; display: block; }
+
+@media (max-width: 900px) {
+  .fs-shell { padding: 14px 16px 20px; }
+  .fs-body { grid-template-columns: 1fr; gap: 20px; overflow-y: auto; }
+  .fs-side { max-height: 40vh; }
+  .fs-cover-wrap { width: min(60vw, 320px); }
+}
+
+/* ================== PODC PANEL ================== */
+.podc-hero {
+  background: linear-gradient(135deg, rgba(34,197,94,0.18), rgba(0,0,0,0.85));
+  border: 1px solid var(--green);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 30px rgba(34,197,94,0.15) inset;
+}
+.podc-hero-title { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
+.podc-hero-title svg { width:36px; height:36px; stroke:var(--green); stroke-width:2; fill:none; filter: drop-shadow(0 0 8px var(--green-glow)); }
+.podc-hero-title h3 { color:var(--green); font-size:20px; font-weight:800; letter-spacing:-0.5px; }
+.podc-hero-title p { color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:2px; margin-top:2px; }
+.podc-stats { display:grid; grid-template-columns: repeat(4, 1fr); gap:10px; }
+.podc-stat {
+  background: #000; border:1px solid rgba(34,197,94,0.3);
+  border-radius: 10px; padding:12px; text-align:center;
+}
+.podc-stat span { display:block; font-size:24px; font-weight:800; color:var(--green); }
+.podc-stat small { display:block; font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1.2px; margin-top:4px; }
+
+.podc-nav { display:grid; grid-template-columns: repeat(4, 1fr); gap:8px; margin-bottom:18px; }
+.podc-nav-btn {
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+  padding: 14px 6px;
+  background:#0a0f0b; border:1px solid var(--border);
+  border-radius: 10px; color:var(--muted); cursor:pointer;
+  font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px;
+  transition: var(--transition);
+}
+.podc-nav-btn svg { width:22px; height:22px; stroke:currentColor; stroke-width:2; fill:none; }
+.podc-nav-btn:hover { color:#fff; border-color: rgba(34,197,94,0.4); }
+.podc-nav-btn.active {
+  background: linear-gradient(180deg, rgba(34,197,94,0.25), rgba(0,0,0,0.6));
+  color: var(--green); border-color: var(--green);
+  box-shadow: 0 0 18px rgba(34,197,94,0.35);
+}
+.podc-section { display:none; }
+.podc-section.active { display:block; animation: adminIn 0.25s ease; }
+.podc-card-title { font-size:13px; font-weight:700; color:var(--green); margin: 6px 0 12px; text-transform:uppercase; letter-spacing:1.2px; }
+.podc-list { display:flex; flex-direction:column; gap:8px; }
+.podc-item {
+  background:#0a0f0b; border:1px solid var(--border); border-left:3px solid var(--green);
+  border-radius: 10px; padding:12px 14px;
+  display:flex; justify-content:space-between; align-items:flex-start; gap:12px;
+}
+.podc-item:hover { border-color: rgba(34,197,94,0.45); background:#0f1610; }
+.podc-item .body h5 { font-size:14px; color:#fff; font-weight:700; margin-bottom:4px; }
+.podc-item .body p { font-size:12px; color:var(--muted); line-height:1.5; }
+.podc-item .body .tag {
+  display:inline-block; margin-top:6px; padding:3px 8px; border-radius: 20px;
+  font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px;
+  background: rgba(34,197,94,0.15); color: var(--green); border:1px solid rgba(34,197,94,0.4);
+}
+.podc-item .body .tag.warn { background:rgba(245,158,11,0.15); color:#f59e0b; border-color:rgba(245,158,11,0.4); }
+.podc-item .body .tag.crit { background:rgba(239,68,68,0.15); color:#ef4444; border-color:rgba(239,68,68,0.4); }
+.podc-item button.rm {
+  background:none; border:none; color:var(--muted); cursor:pointer; padding:4px;
+  border-radius:6px; flex-shrink:0;
+}
+.podc-item button.rm:hover { color:#ef4444; background:rgba(239,68,68,0.1); }
+.podc-item button.rm svg { width:16px; height:16px; stroke:currentColor; stroke-width:2; fill:none; }
+.podc-empty { text-align:center; color:var(--muted); font-size:12px; padding:20px; font-style:italic; }
+
+.podc-metrics { display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:10px; }
+.podc-metric {
+  background: linear-gradient(160deg, #0a0f0b, #000);
+  border:1px solid rgba(34,197,94,0.25);
+  border-radius: 10px; padding: 14px;
+}
+.podc-metric .k { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:1.2px; }
+.podc-metric .v { font-size:22px; font-weight:800; color:var(--green); margin-top:6px; }
+
+@media (max-width: 640px) {
+  .podc-stats, .podc-nav { grid-template-columns: repeat(2, 1fr); }
+}
+
+
+/* ===== KAWE INTRO / AUTH / REALTIME ===== */
+.intro-screen,.auth-screen{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#020403;color:#fff}
+.intro-screen::before,.auth-screen::before{content:"";position:absolute;inset:-20%;background:radial-gradient(circle at 20% 25%,rgba(34,197,94,.28),transparent 28%),radial-gradient(circle at 80% 75%,rgba(22,163,74,.18),transparent 30%),linear-gradient(135deg,#020403,#07110a 55%,#000);animation:kaweGlow 8s ease-in-out infinite alternate}
+@keyframes kaweGlow{from{transform:scale(1);filter:hue-rotate(0deg)}to{transform:scale(1.08);filter:hue-rotate(12deg)}}
+.intro-screen.hidden,.auth-screen.hidden{display:none}
+.intro-card,.auth-card{position:relative;z-index:1;width:min(700px,calc(100% - 36px));padding:54px 42px;border:1px solid rgba(34,197,94,.35);border-radius:28px;background:linear-gradient(145deg,rgba(9,18,12,.92),rgba(0,0,0,.78));box-shadow:0 30px 90px rgba(0,0,0,.7),0 0 80px rgba(34,197,94,.14);text-align:center;animation:kaweIn .5s cubic-bezier(.23,1,.32,1)}
+@keyframes kaweIn{from{opacity:0;transform:translateY(20px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+.intro-mark{width:92px;height:92px;margin:0 auto 22px;border-radius:28px;display:grid;place-items:center;background:linear-gradient(135deg,#22c55e,#064e1d);color:#000;font-size:38px;font-weight:900;box-shadow:0 0 42px rgba(34,197,94,.45)}
+.intro-kicker{color:#86efac;text-transform:uppercase;letter-spacing:4px;font-size:11px;font-weight:800;margin-bottom:13px}.intro-card h1{font-size:clamp(34px,7vw,72px);line-height:.98;letter-spacing:-3px;margin-bottom:15px}.intro-card p{color:#b7c7bc;font-size:15px;line-height:1.7;max-width:520px;margin:0 auto 25px}.intro-progress{width:160px;height:4px;background:#1a2b1d;border-radius:99px;margin:20px auto 0;overflow:hidden}.intro-progress i{display:block;height:100%;width:50%;background:#22c55e;animation:kaweProgress 2.4s linear forwards}@keyframes kaweProgress{to{width:100%}}
+.intro-actions{display:flex;justify-content:center;gap:10px;margin-top:22px}.auth-card{width:min(470px,calc(100% - 32px));padding:32px}.auth-card h2{font-size:27px;margin-bottom:7px}.auth-card .auth-sub{color:#91a295;font-size:13px;margin-bottom:24px}.auth-field{text-align:left;margin-bottom:13px}.auth-field label{display:block;color:#9daf9f;font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}.auth-field input{width:100%;padding:13px 14px;border-radius:11px;border:1px solid rgba(34,197,94,.22);background:rgba(255,255,255,.055);color:#fff;outline:none}.auth-field input:focus{border-color:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.12)}.auth-actions{display:grid;gap:9px;margin-top:18px}.auth-btn{padding:13px 15px;border-radius:11px;border:1px solid rgba(34,197,94,.32);background:rgba(34,197,94,.1);color:#fff;font-weight:800;cursor:pointer;transition:all .2s}.auth-btn.primary{background:#22c55e;color:#031006;border-color:#22c55e}.auth-btn:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(34,197,94,.18)}.auth-divider{display:flex;align-items:center;gap:10px;color:#637368;font-size:11px;margin:16px 0}.auth-divider:before,.auth-divider:after{content:"";height:1px;background:rgba(255,255,255,.1);flex:1}.auth-error{min-height:18px;color:#f87171;font-size:12px;margin-top:10px}.auth-note{color:#6f8073;font-size:11px;line-height:1.5;margin-top:14px}.session-pill{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:20px;background:rgba(34,197,94,.1);color:#86efac;font-size:11px}
+.player-bar{display:none!important}.player-launcher{position:fixed;right:22px;bottom:22px;z-index:1200;width:58px;height:58px;border:1px solid #22c55e;border-radius:50%;background:#22c55e;color:#001b08;display:grid;place-items:center;box-shadow:0 0 30px rgba(34,197,94,.38);cursor:pointer}.player-launcher svg{width:25px;height:25px;fill:currentColor}.fs-player{inset:auto;right:22px;bottom:22px;width:min(1050px,calc(100vw - 44px));height:min(720px,calc(100vh - 44px));border:1px solid rgba(34,197,94,.4);border-radius:26px;box-shadow:0 30px 100px rgba(0,0,0,.78),0 0 60px rgba(34,197,94,.14)}.fs-shell{padding:16px 24px 24px}.fs-body{grid-template-columns:1fr 320px;gap:26px}.fs-stage{gap:16px}.fs-cover-wrap{width:min(34vh,300px)}
+@media(max-width:700px){.intro-card,.auth-card{padding:32px 22px}.fs-player{right:10px;bottom:10px;width:calc(100vw - 20px);height:calc(100vh - 20px);border-radius:18px}.fs-shell{padding:10px 12px 14px}.fs-body{grid-template-columns:1fr}.fs-side{max-height:31vh}.player-launcher{right:16px;bottom:16px}}
+
+</style>
+<style>
+/* Player em aba real: ocupa a viewport inteira, sem janela flutuante */
+.fs-player{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;max-width:none!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+.fs-shell{padding:clamp(18px,3vw,42px) clamp(22px,5vw,80px) clamp(24px,4vw,50px)!important;grid-template-rows:72px 1fr!important}
+.fs-body{grid-template-columns:minmax(0,1fr) minmax(360px,30vw)!important;gap:clamp(28px,5vw,90px)!important}
+.fs-cover-wrap{width:min(52vh,560px)!important;border-radius:28px!important}
+.fs-title{font-size:clamp(30px,4vw,60px)!important}.fs-artist{font-size:18px}
+.fs-side{max-height:none!important;height:100%!important;border-radius:24px!important}
+.fs-stage{gap:clamp(16px,2.2vh,30px)!important}
+.fs-media{display:none;width:min(720px,80vw);max-height:30vh;border:1px solid rgba(34,197,94,.3);border-radius:18px;overflow:hidden;background:#000}.fs-media.active{display:block}.fs-media iframe,.fs-media video{display:block;width:100%;height:100%;min-height:180px;border:0}
+.fs-feature-row{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:4px}.fs-feature{border:1px solid rgba(34,197,94,.28);background:rgba(0,0,0,.28);color:#dff7e5;padding:9px 12px;border-radius:10px;font-size:12px}.fs-feature select{background:transparent;color:#dff7e5;border:0;outline:0;font-weight:700}.fs-feature option{background:#07100a;color:#fff}
+.sleep-panel{display:none;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;padding:10px;border:1px solid rgba(34,197,94,.25);background:rgba(0,0,0,.35);border-radius:12px;color:#dff7e5;font-size:12px}.sleep-panel.active{display:flex}.sleep-panel button{border:1px solid rgba(34,197,94,.35);background:rgba(34,197,94,.1);color:#dff7e5;border-radius:8px;padding:7px 10px;cursor:pointer}.sleep-panel button:hover{background:#22c55e;color:#001b08}
+@media(max-width:1050px){.fs-body{grid-template-columns:minmax(0,1fr) minmax(300px,34vw)!important;gap:25px!important}.fs-cover-wrap{width:min(44vh,430px)!important}}
+@media(max-width:760px){.fs-shell{padding:12px 14px 18px!important;grid-template-rows:56px 1fr!important}.fs-body{display:block!important;overflow-y:auto!important}.fs-stage{min-height:auto;padding:10px 0 22px}.fs-cover-wrap{width:min(62vw,330px)!important}.fs-side{height:360px!important;margin-top:18px}.fs-feature-row{margin-bottom:10px}.fs-media{width:100%}.fs-top .fs-brand{font-size:13px}}
 </style>
 </head>
 <body id="appBody">
+
+
+<!-- KAWE opening sequence -->
+<section class="intro-screen" id="introScreen">
+  <div class="intro-card" id="introCard">
+    <div class="intro-mark">K</div>
+    <div class="intro-kicker">Kawe Desenvolvedor</div>
+    <h1>Construído para<br><span style="color:#22c55e">sentir o som.</span></h1>
+    <p>Uma experiência digital autoral, conectada em tempo real e criada para dar palco a cada batida.</p>
+    <div class="intro-progress"><i></i></div>
+    <div class="intro-actions"><button class="auth-btn" onclick="skipIntro()">Pular apresentação</button></div>
+  </div>
+</section>
+<section class="intro-screen hidden" id="introScreen2">
+  <div class="intro-card">
+    <div class="intro-mark" style="border-radius:50%;font-size:28px">♪</div>
+    <div class="intro-kicker">Kawe Música Oficial</div>
+    <h1>Seu catálogo.<br><span style="color:#22c55e">Sua energia.</span></h1>
+    <p>Descubra, reproduza e acompanhe os lançamentos oficiais do universo Kawe em um player flutuante completo.</p>
+    <div class="intro-progress"><i></i></div>
+    <div class="intro-actions"><button class="auth-btn primary" onclick="finishIntro()">Entrar na plataforma</button></div>
+  </div>
+</section>
+<section class="auth-screen hidden" id="authScreen">
+  <div class="auth-card">
+    <div class="intro-mark" style="width:58px;height:58px;border-radius:17px;font-size:25px;margin-bottom:15px">K</div>
+    <h2>Acesse a Kawe Music</h2><p class="auth-sub">Entre com sua conta, continue com Google ou navegue como visitante.</p>
+    <form onsubmit="handleLogin(event)">
+      <div class="auth-field"><label for="authEmail">E-mail</label><input id="authEmail" type="email" autocomplete="email" placeholder="voce@email.com" required></div>
+      <div class="auth-field"><label for="authPassword">Senha</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="Sua senha" required></div>
+      <button class="auth-btn primary" type="submit">Entrar com e-mail</button>
+    </form>
+    <div class="auth-divider">ou</div>
+    <div class="auth-actions"><button class="auth-btn" onclick="createAccount()">Criar nova conta</button><button class="auth-btn" onclick="signInGoogle()">Continuar com Google</button><button class="auth-btn" onclick="signInGuest()">Entrar como visitante</button></div>
+    <div class="auth-error" id="authError"></div>
+    <p class="auth-note">A senha administrativa não fica armazenada no site. O acesso do administrador é validado pelo Firebase Authentication e pelo UID autorizado.</p>
+  </div>
+</section>
 
 <!-- ================== SVG SYMBOLS ================== -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -566,6 +1001,8 @@ header {
 </div>
 
 <!-- Player Bar -->
+<button class="player-launcher" id="playerLauncher" onclick="toggleFullscreen()" title="Abrir player flutuante"><svg><use href="#i-play"/></svg></button>
+
 <div class="player-bar">
   <div class="track-info">
     <img src="https://picsum.photos/200" class="track-thumb" id="pThumb">
@@ -624,7 +1061,11 @@ header {
   <div class="admin-modal" id="pinScreen">
     <div class="pin-lock-icon"><svg><use href="#i-lock"/></svg></div>
     <div class="pin-title">Acesso Administrativo</div>
-    <div class="pin-sub">Digite o código de 4 dígitos para continuar</div>
+    <div class="pin-sub">Autentique sua conta Firebase e confirme o PIN de 4 dígitos.</div>
+    <div class="form-row" style="display:block;text-align:left"><label style="display:block;margin-bottom:6px">E-mail do administrador</label><input id="adminEmail" type="email" autocomplete="username" placeholder="E-mail autorizado" style="width:100%;padding:11px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(34,197,94,.2);color:#fff"></div>
+    <div class="form-row" style="display:block;text-align:left"><label style="display:block;margin-bottom:6px">Senha Firebase</label><input id="adminPassword" type="password" autocomplete="current-password" placeholder="Senha da conta Firebase" style="width:100%;padding:11px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(34,197,94,.2);color:#fff"></div>
+    <button class="admin-btn primary" style="width:100%;justify-content:center;margin:5px 0 16px" onclick="adminFirebaseLogin()">Validar conta Firebase</button>
+    <div class="pin-sub" style="margin-bottom:10px">Depois, confirme o PIN local de segurança</div>
     <div class="pin-dots" id="pinDots">
       <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
     </div>
@@ -643,7 +1084,7 @@ header {
       <button class="pin-key" onclick="pinPress('0')">0</button>
       <button class="pin-key action" onclick="closeAdmin()">✕</button>
     </div>
-    <p style="font-size:11px; color:var(--muted); margin-top:8px;">Senha padrão: <b style="color:var(--green)">1234</b></p>
+    <p style="font-size:11px; color:var(--muted); margin-top:8px;">PIN definido pelo proprietário: 4 dígitos</p>
   </div>
 
   <!-- MAIN ADMIN PANEL -->
@@ -663,6 +1104,7 @@ header {
         <button class="admin-side-btn" data-tab="upload" onclick="switchTab('upload')"><svg><use href="#i-cloud-up"/></svg> Upload de Arquivo</button>
         <button class="admin-side-btn" data-tab="site" onclick="switchTab('site')"><svg><use href="#i-layout"/></svg> Site</button>
         <button class="admin-side-btn" data-tab="backup" onclick="switchTab('backup')"><svg><use href="#i-save"/></svg> Backup</button>
+        <button class="admin-side-btn" data-tab="gestao" onclick="switchTab('gestao')"><svg><use href="#i-shield"/></svg> Gestão PODC</button>
         <button class="admin-side-btn" data-tab="security" onclick="switchTab('security')"><svg><use href="#i-key"/></svg> Segurança</button>
       </aside>
 
@@ -673,6 +1115,7 @@ header {
           <button class="admin-tab" data-tab="upload"></button>
           <button class="admin-tab" data-tab="site"></button>
           <button class="admin-tab" data-tab="backup"></button>
+          <button class="admin-tab" data-tab="gestao"></button>
           <button class="admin-tab" data-tab="security"></button>
         </div>
 
@@ -763,9 +1206,111 @@ header {
       <div id="backupInfo" style="font-size:13px; color:var(--muted); line-height:1.8;"></div>
     </div>
 
+    <!-- GESTÃO PODC TAB -->
+    <div class="admin-panel" data-panel="gestao">
+      <div class="podc-hero">
+        <div class="podc-hero-title">
+          <svg><use href="#i-shield"/></svg>
+          <div>
+            <h3>Painel de Gestão PODC</h3>
+            <p>Planejar · Organizar · Dirigir · Controlar</p>
+          </div>
+        </div>
+        <div class="podc-stats">
+          <div class="podc-stat"><span id="podcCountP">0</span><small>Planos</small></div>
+          <div class="podc-stat"><span id="podcCountO">0</span><small>Organização</small></div>
+          <div class="podc-stat"><span id="podcCountD">0</span><small>Direção</small></div>
+          <div class="podc-stat"><span id="podcCountC">0</span><small>Controle</small></div>
+        </div>
+      </div>
+
+      <div class="podc-nav">
+        <button class="podc-nav-btn active" data-podc="planejar" onclick="switchPodc('planejar')">
+          <svg><use href="#i-layout"/></svg><span>Planejar</span>
+        </button>
+        <button class="podc-nav-btn" data-podc="organizar" onclick="switchPodc('organizar')">
+          <svg><use href="#i-save"/></svg><span>Organizar</span>
+        </button>
+        <button class="podc-nav-btn" data-podc="dirigir" onclick="switchPodc('dirigir')">
+          <svg><use href="#i-video"/></svg><span>Dirigir</span>
+        </button>
+        <button class="podc-nav-btn" data-podc="controlar" onclick="switchPodc('controlar')">
+          <svg><use href="#i-key"/></svg><span>Controlar</span>
+        </button>
+      </div>
+
+      <!-- PLANEJAR -->
+      <div class="podc-section active" data-podc-panel="planejar">
+        <div class="podc-card-title">Novo Plano / Meta</div>
+        <div class="form-row"><label>Título do Plano</label><input id="planTitle" placeholder="Ex.: Lançar EP até Dezembro"></div>
+        <div class="form-row"><label>Descrição / Objetivo</label><textarea id="planDesc" rows="2" placeholder="Descreva a meta, público e resultado esperado..."></textarea></div>
+        <div class="form-row"><label>Prazo</label><input id="planDate" type="date"></div>
+        <div class="admin-actions-row">
+          <button class="admin-btn primary" onclick="addPodc('planejar')"><svg><use href="#i-plus"/></svg> Adicionar Plano</button>
+        </div>
+        <div class="podc-card-title" style="margin-top:22px;">Planos Cadastrados</div>
+        <div class="podc-list" id="podcListPlanejar"></div>
+      </div>
+
+      <!-- ORGANIZAR -->
+      <div class="podc-section" data-podc-panel="organizar">
+        <div class="podc-card-title">Organização — Categorias & Recursos</div>
+        <div class="form-row"><label>Categoria / Playlist</label><input id="orgTitle" placeholder="Ex.: Trap BR, Lançamentos 2026"></div>
+        <div class="form-row"><label>Descrição</label><textarea id="orgDesc" rows="2" placeholder="O que agrupa esta categoria..."></textarea></div>
+        <div class="form-row"><label>Recurso / Responsável</label><input id="orgOwner" placeholder="Ex.: Kawe, Estúdio X"></div>
+        <div class="admin-actions-row">
+          <button class="admin-btn primary" onclick="addPodc('organizar')"><svg><use href="#i-plus"/></svg> Adicionar</button>
+        </div>
+        <div class="podc-card-title" style="margin-top:22px;">Categorias</div>
+        <div class="podc-list" id="podcListOrganizar"></div>
+      </div>
+
+      <!-- DIRIGIR -->
+      <div class="podc-section" data-podc-panel="dirigir">
+        <div class="podc-card-title">Direção — Equipe & Tarefas Ativas</div>
+        <div class="form-row"><label>Nome / Função</label><input id="dirTitle" placeholder="Ex.: DJ João — Mixagem"></div>
+        <div class="form-row"><label>Instrução / Diretriz</label><textarea id="dirDesc" rows="2" placeholder="O que precisa ser feito, com que qualidade..."></textarea></div>
+        <div class="form-row"><label>Prioridade</label>
+          <select id="dirPrio">
+            <option value="baixa">Baixa</option>
+            <option value="media" selected>Média</option>
+            <option value="alta">Alta</option>
+          </select>
+        </div>
+        <div class="admin-actions-row">
+          <button class="admin-btn primary" onclick="addPodc('dirigir')"><svg><use href="#i-plus"/></svg> Delegar</button>
+        </div>
+        <div class="podc-card-title" style="margin-top:22px;">Delegações Ativas</div>
+        <div class="podc-list" id="podcListDirigir"></div>
+      </div>
+
+      <!-- CONTROLAR -->
+      <div class="podc-section" data-podc-panel="controlar">
+        <div class="podc-card-title">Controle — Métricas do Aplicativo</div>
+        <div class="podc-metrics" id="podcMetrics"></div>
+
+        <div class="podc-card-title" style="margin-top:22px;">Registrar Verificação / Auditoria</div>
+        <div class="form-row"><label>Item Auditado</label><input id="ctrlTitle" placeholder="Ex.: Qualidade do áudio do EP"></div>
+        <div class="form-row"><label>Resultado / Correção</label><textarea id="ctrlDesc" rows="2" placeholder="O que foi verificado e ajustes necessários..."></textarea></div>
+        <div class="form-row"><label>Status</label>
+          <select id="ctrlStatus">
+            <option value="ok">✓ Conforme</option>
+            <option value="atencao">⚠ Requer Atenção</option>
+            <option value="critico">✕ Crítico</option>
+          </select>
+        </div>
+        <div class="admin-actions-row">
+          <button class="admin-btn primary" onclick="addPodc('controlar')"><svg><use href="#i-plus"/></svg> Registrar</button>
+        </div>
+        <div class="podc-card-title" style="margin-top:22px;">Histórico de Auditorias</div>
+        <div class="podc-list" id="podcListControlar"></div>
+      </div>
+    </div>
+
+
     <!-- SECURITY TAB -->
     <div class="admin-panel" data-panel="security">
-      <div class="admin-section-title">Alterar Senha do Admin</div>
+      <div class="admin-section-title">Segurança do Admin</div><p style="color:var(--muted);font-size:13px;line-height:1.6">A senha do administrador é validada pelo Firebase Authentication. O PIN de confirmação desta tela permanece fixo em 2011 e não é salvo em localStorage.</p>
       <div class="form-row"><label>Nova senha (4 dígitos)</label><input id="newPin" type="password" maxlength="4" pattern="\d{4}" placeholder="0000"></div>
       <div class="form-row"><label>Confirmar</label><input id="newPin2" type="password" maxlength="4" pattern="\d{4}" placeholder="0000"></div>
       <div class="admin-actions-row">
@@ -805,7 +1350,6 @@ const defaultTracks = [
   { id: 17, title: "Treinamento de Força", artist: "Trxveler", url: "https://soundcloud.com/raptrapbrasil/trxveler-treinamento-de-forca", img: "https://i1.sndcdn.com/artworks-000494452509-0f0x0z-t500x500.jpg", type: "soundcloud", liked: false, plays: 0 },
   { id: 18, title: "Treinamento de Força", artist: "Skviz", url: "https://soundcloud.com/skviz-lyutyj/trxveler-treinamento-de-forca", img: "https://i1.sndcdn.com/artworks-000494452509-0f0x0z-t500x500.jpg", type: "soundcloud", liked: false, plays: 0 },
   { id: 19, title: "Siren Head Funk", artist: "theogyrdima", url: "https://soundcloud.com/theogyrdima/siren-head-funk", img: "https://i1.sndcdn.com/artworks-000494452509-0f0x0z-t500x500.jpg", type: "soundcloud", liked: false, plays: 0 },
-  { id: 20, title: "Granny Funk 2", artist: "DJ LTA5 DA ZN", url: "https://soundcloud.com/dj-lta5-da-zn/granny-funk-2", img: "https://i1.sndcdn.com/artworks-000494452509-0f0x0z-t500x500.jpg", type: "soundcloud", liked: false, plays: 0 }
 ];
 
 const defaultSite = {
@@ -817,13 +1361,16 @@ const defaultSite = {
 let store = loadStore();
 let tracks = store.tracks;
 let site = store.site;
+let isAdminSession = false;
+let realtimeBound = false;
 
 function loadStore() {
   try {
     const raw = localStorage.getItem(STORE_KEY);
     if (raw) {
       const d = JSON.parse(raw);
-      return { tracks: d.tracks || [...defaultTracks], site: { ...defaultSite, ...(d.site||{}) } };
+      const cleanTracks = (d.tracks || [...defaultTracks]).filter(t => !/granny/i.test(`${t.title || ''} ${t.artist || ''}`));
+      return { tracks: cleanTracks, site: { ...defaultSite, ...(d.site||{}) } };
     }
   } catch(e){}
   return { tracks: JSON.parse(JSON.stringify(defaultTracks)), site: { ...defaultSite } };
@@ -831,6 +1378,46 @@ function loadStore() {
 function saveStore() {
   localStorage.setItem(STORE_KEY, JSON.stringify({ tracks, site }));
 }
+function syncCatalog() {
+  saveStore();
+  if (isAdminSession && window.KaweFirebase) {
+    window.KaweFirebase.writeCatalog({ tracks, site, updatedAt: Date.now() }).catch(() => notify('Falha ao sincronizar com o Firebase'));
+  }
+}
+function syncUserPrefs() {
+  const user = window.KaweFirebase && window.KaweFirebase.auth.currentUser;
+  if (!user || !window.KaweFirebase) return;
+  window.KaweFirebase.writeUser(user.uid, { liked: tracks.filter(t => t.liked).map(t => t.id), recent: tracks[curIdx] ? tracks[curIdx].id : null, updatedAt: Date.now() }).catch(() => notify('Falha ao salvar preferências'));
+}
+function syncPlay(trackId) {
+  const user = window.KaweFirebase && window.KaweFirebase.auth.currentUser;
+  if (user && window.KaweFirebase) window.KaweFirebase.writePlay(user.uid, trackId).catch(() => {});
+}
+function bindRealtime() {
+  if (realtimeBound || !window.KaweFirebase) return;
+  realtimeBound = true;
+  window.KaweFirebase.subscribe(data => {
+    if (!data || isAdminSession) return;
+    if (Array.isArray(data.tracks)) tracks = data.tracks;
+    if (data.site) site = { ...defaultSite, ...data.site };
+    saveStore(); applySite(); render();
+  });
+  window.KaweFirebase.subscribePodc(data => {
+    if (!data || !isAdminSession) return;
+    podcData = { planejar: data.planejar || [], organizar: data.organizar || [], dirigir: data.dirigir || [], controlar: data.controlar || [] };
+    localStorage.setItem(PODC_KEY, JSON.stringify(podcData)); renderPodc();
+  });
+  const user = window.KaweFirebase.auth.currentUser;
+  if (user) window.KaweFirebase.subscribeUser(user.uid, data => {
+    if (!data || !Array.isArray(data.liked)) return;
+    tracks.forEach(t => { t.liked = data.liked.includes(t.id); }); render();
+  });
+}
+function authErrorMessage(error) {
+  const code = error && error.code || '';
+  return code.includes('invalid-credential') || code.includes('wrong-password') ? 'E-mail ou senha inválidos.' : code.includes('popup') ? 'Não foi possível abrir o login Google.' : 'Não foi possível concluir o login agora.';
+}
+
 
 // ============= PLAYER STATE =============
 let curIdx = -1;
@@ -839,6 +1426,9 @@ let isShuffle = false;
 let isRepeat = false;
 let isMuted = false;
 let scWidget = null;
+let activeMedia = null;
+let playbackRate = 1;
+let sleepTimer = null;
 let audioCtx, analyser, dataArray, canvas, ctx;
 
 const audio = document.getElementById('audio');
@@ -882,8 +1472,7 @@ function play(idx) {
   } else {
     stopSC();
     hideIframe();
-    audio.src = t.url;
-    audio.play().catch(()=>{});
+    playNativeMedia(t);
   }
 
   isPlaying = true;
@@ -891,19 +1480,44 @@ function play(idx) {
   notify(`Iniciando: ${t.title}`);
   t.plays++;
   saveStore();
+  syncPlay(t.id); syncUserPrefs();
+  openFullscreen();
 
   document.getElementById('appBody').style.background = `linear-gradient(rgba(0,0,0,0.85), var(--bg)), url(${t.img})`;
   document.getElementById('appBody').style.backgroundSize = 'cover';
   document.getElementById('appBody').style.backgroundAttachment = 'fixed';
 }
 
+function currentMedia() { return activeMedia || audio; }
+function playNativeMedia(t) {
+  const isVideo = t.type === 'video' || /\.(mp4|webm|mov|m4v)(\?|$)/i.test(t.url || '');
+  const box = document.getElementById('fsMedia');
+  if (box) { box.innerHTML = ''; box.classList.toggle('active', isVideo); }
+  activeMedia = audio;
+  if (isVideo) {
+    const video = document.createElement('video');
+    video.id='videoSurface'; video.src=t.url; video.controls=false; video.autoplay=true; video.playsInline=true; video.preload='metadata';
+    box.appendChild(video); activeMedia=video;
+    video.ontimeupdate=syncProgress; video.onloadedmetadata=syncProgress; video.onended=()=>{ if(isRepeat) play(curIdx); else next(); };
+    video.play().catch(()=>{ isPlaying=false; updatePlayBtn(); notify('Toque em play para iniciar este vídeo'); });
+  } else {
+    audio.src=t.url; audio.currentTime=0; audio.playbackRate=playbackRate;
+    audio.play().catch(()=>{ isPlaying=false; updatePlayBtn(); notify('Não foi possível iniciar este áudio'); });
+  }
+}
+function syncProgress() { const media=currentMedia(); const duration=media.duration||0; const pct=duration?(media.currentTime/duration)*100:0; document.getElementById('pBar').style.width=`${pct}%`; document.getElementById('curTime').innerText=fmt(media.currentTime); document.getElementById('durTime').innerText=fmt(duration); }
+
 function initSC(url) {
   const frame = document.getElementById('scFrame');
   frame.src = `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&auto_play=true&hide_related=true`;
-  if (!scWidget) {
+  scWidget = null;
+  frame.onload = () => {
+    if (!window.SC) { notify('SoundCloud não carregou nesta rede'); return; }
     scWidget = SC.Widget(frame);
     scWidget.bind(SC.Widget.Events.FINISH, () => next());
-  }
+    scWidget.bind(SC.Widget.Events.PLAY, () => { isPlaying=true; updatePlayBtn(); });
+    scWidget.bind(SC.Widget.Events.PAUSE, () => { isPlaying=false; updatePlayBtn(); });
+  };
 }
 function stopSC() {
   if (scWidget) scWidget.pause();
@@ -911,6 +1525,12 @@ function stopSC() {
 }
 
 function playIframe(t) {
+  const fsBox=document.getElementById('fsMedia');
+  if (fsBox) {
+    fsBox.innerHTML = t.iframe || `<iframe src="${t.url}" width="100%" height="260" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+    fsBox.classList.add('active');
+    return;
+  }
   let box = document.getElementById('customIframeBox');
   if (!box) {
     box = document.createElement('div');
@@ -931,15 +1551,18 @@ function playIframe(t) {
 function hideIframe() {
   const box = document.getElementById('customIframeBox');
   if (box) { document.getElementById('ciBody').innerHTML = ''; box.style.display = 'none'; }
+  const fsBox=document.getElementById('fsMedia'); if (fsBox) { fsBox.innerHTML=''; fsBox.classList.remove('active'); }
 }
 
 function togglePlay() {
   if (curIdx === -1) { play(0); return; }
   const t = tracks[curIdx];
   if (t.type === 'soundcloud') {
-    scWidget && scWidget.toggle();
+    if (scWidget) scWidget.toggle(); else return notify('O player SoundCloud ainda está carregando');
+  } else if (t.type === 'iframe' || t.iframe) {
+    return notify('Use os controles do conteúdo incorporado');
   } else {
-    isPlaying ? audio.pause() : audio.play();
+    const media=currentMedia(); isPlaying ? media.pause() : media.play().catch(()=>{});
   }
   isPlaying = !isPlaying;
   updatePlayBtn();
@@ -956,18 +1579,13 @@ function prev() {
   play(p);
 }
 
-audio.ontimeupdate = () => {
-  const pct = (audio.currentTime / audio.duration) * 100;
-  document.getElementById('pBar').style.width = `${pct}%`;
-  document.getElementById('curTime').innerText = fmt(audio.currentTime);
-  document.getElementById('durTime').innerText = fmt(audio.duration || 0);
-};
+audio.ontimeupdate = syncProgress;
 audio.onended = () => { if (isRepeat) play(curIdx); else next(); };
 
 function seek(e) {
   const rail = document.getElementById('pRail');
   const pct = (e.clientX - rail.getBoundingClientRect().left) / rail.offsetWidth;
-  audio.currentTime = pct * audio.duration;
+  const media=currentMedia(); if (isFinite(media.duration)) media.currentTime = pct * media.duration;
 }
 function fmt(s) {
   if (!isFinite(s)) return '0:00';
@@ -988,6 +1606,7 @@ function toggleLike() {
   if (curIdx === -1) return;
   tracks[curIdx].liked = !tracks[curIdx].liked;
   saveStore();
+  syncUserPrefs();
   document.getElementById('pLike').style.color = tracks[curIdx].liked ? 'var(--green)' : '#fff';
   document.getElementById('pLikeIcon').style.fill = tracks[curIdx].liked ? 'var(--green)' : 'none';
   notify(tracks[curIdx].liked ? 'Adicionado aos favoritos' : 'Removido dos favoritos');
@@ -1004,14 +1623,14 @@ function toggleRepeat() {
 }
 function toggleMute() {
   isMuted = !isMuted;
-  audio.muted = isMuted;
+  currentMedia().muted = isMuted;
   document.getElementById('pMuteIcon').innerHTML = `<use href="#${isMuted ? 'i-mute' : 'i-volume'}"/>`;
 }
 function setVol(e) {
   const rail = e.currentTarget;
   const vol = (e.clientX - rail.getBoundingClientRect().left) / rail.offsetWidth;
-  audio.volume = Math.max(0, Math.min(1, vol));
-  document.getElementById('vBar').style.width = `${audio.volume * 100}%`;
+  const media=currentMedia(); media.volume = Math.max(0, Math.min(1, vol));
+  document.getElementById('vBar').style.width = `${media.volume * 100}%`;
 }
 function handleSearch() {
   const q = document.getElementById('search').value.toLowerCase();
@@ -1022,10 +1641,119 @@ function toggleLyrics() {
   const view = document.getElementById('lyricsView');
   view.style.display = (view.style.display === 'flex') ? 'none' : 'flex';
 }
+function setPlaybackRate(rate) { playbackRate=Number(rate)||1; currentMedia().playbackRate=playbackRate; notify(`Velocidade: ${playbackRate}×`); }
+function restartTrack() { const media=currentMedia(); if (isFinite(media.duration)) { media.currentTime=0; media.play().catch(()=>{}); isPlaying=true; updatePlayBtn(); } }
+function setSleepTimer() { const panel=document.getElementById('sleepTimerPanel'); if(panel) panel.classList.toggle('active'); }
+function chooseSleepTimer(minutes) { clearTimeout(sleepTimer); if (!minutes) { notify('Temporizador cancelado'); return; } sleepTimer=setTimeout(() => { currentMedia().pause(); isPlaying=false; updatePlayBtn(); notify('Temporizador encerrou a reprodução'); }, minutes*60000); const panel=document.getElementById('sleepTimerPanel'); if(panel) panel.classList.remove('active'); notify(`Temporizador definido para ${minutes} minutos`); }
+async function shareCurrentTrack() { const t=tracks[curIdx]; if (!t) return; const text=`${t.title} — ${t.artist} | Kawe Music`; try { await navigator.clipboard.writeText(text); notify('Faixa copiada para compartilhar'); } catch(e) { prompt('Copie o texto da faixa:', text); } }
+/* ================== FULLSCREEN PLAYER ================== */
+let fsSyncTimer = null;
 function toggleFullscreen() {
-  if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-  else document.exitFullscreen();
+  const el = document.getElementById('fsPlayer');
+  if (!el.classList.contains('active')) openFullscreen();
+  else closeFullscreen();
 }
+function openFullscreen() {
+  const el = document.getElementById('fsPlayer');
+  el.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  fsRenderQueue();
+  fsSync();
+  fsSyncTimer = setInterval(fsSync, 400);
+
+}
+function closeFullscreen() {
+  const el = document.getElementById('fsPlayer');
+  el.classList.remove('active');
+  document.body.style.overflow = '';
+  clearInterval(fsSyncTimer); fsSyncTimer = null;
+
+}
+function fsSync() {
+  const t = tracks[curIdx];
+  const cover = t ? t.img : 'https://picsum.photos/600';
+  const title = t ? t.title : (document.getElementById('pTitle').innerText);
+  const artist = t ? t.artist : (document.getElementById('pArtist').innerText);
+  document.getElementById('fsCover').src = cover;
+  document.getElementById('fsBg').style.backgroundImage = `url(${cover})`;
+  document.getElementById('fsTitle').innerText = title;
+  document.getElementById('fsArtist').innerText = artist;
+  document.getElementById('fsCur').innerText = document.getElementById('curTime').innerText;
+  document.getElementById('fsDur').innerText = document.getElementById('durTime').innerText;
+  document.getElementById('fsProgressBar').style.width = document.getElementById('pBar').style.width || '0%';
+  document.getElementById('fsVolBar').style.width = document.getElementById('vBar').style.width || '80%';
+  document.getElementById('fsPlayIcon').innerHTML = `<use href="#${isPlaying ? 'i-pause' : 'i-play'}"/>`;
+  document.getElementById('fsCoverWrap').classList.toggle('playing', isPlaying);
+  document.getElementById('fsShuffle').classList.toggle('on', isShuffle);
+  document.getElementById('fsRepeat').classList.toggle('on', isRepeat);
+  document.getElementById('fsLike').classList.toggle('on', t && t.liked);
+  document.getElementById('fsMuteIcon').innerHTML = `<use href="#${isMuted ? 'i-mute' : 'i-volume'}"/>`;
+  // update current in queue
+  document.querySelectorAll('.fs-queue-item').forEach((el,i) => el.classList.toggle('current', i === curIdx));
+}
+function fsRenderQueue() {
+  const box = document.getElementById('fsQueue');
+  if (!tracks.length) { box.innerHTML = '<p style="color:#666; text-align:center; padding:20px; font-size:13px;">Fila vazia</p>'; return; }
+  box.innerHTML = tracks.map((t,i) => `
+    <div class="fs-queue-item ${i===curIdx?'current':''}" onclick="play(${i})">
+      <img src="${t.img}" alt="">
+      <div style="min-width:0">
+        <div class="qtitle">${t.title}</div>
+        <div class="qart">${t.artist}</div>
+      </div>
+      <span class="qtime">${t.plays||0} ▶</span>
+    </div>
+  `).join('');
+}
+function fsSeek(e) {
+  const rail = document.getElementById('fsProgress');
+  const pct = (e.clientX - rail.getBoundingClientRect().left) / rail.offsetWidth;
+  const media=currentMedia(); if (isFinite(media.duration)) media.currentTime = pct * media.duration;
+}
+function fsSetVol(e) {
+  const rail = document.getElementById('fsVol');
+  const vol = (e.clientX - rail.getBoundingClientRect().left) / rail.offsetWidth;
+  const media=currentMedia(); media.volume = Math.max(0, Math.min(1, vol));
+  document.getElementById('vBar').style.width = `${media.volume * 100}%`;
+  document.getElementById('fsVolBar').style.width = `${media.volume * 100}%`;
+}
+function fsSwitchTab(name, btn) {
+  document.querySelectorAll('.fs-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.fs-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelector(`.fs-panel[data-fspanel="${name}"]`).classList.add('active');
+  if (name === 'viz') fsStartViz();
+}
+function fsStartViz() {
+  const c = document.getElementById('fsViz');
+  if (!c) return;
+  if (!audioCtx) { try { toggleVisualizer(); toggleVisualizer(); } catch(e){} }
+  const cx = c.getContext('2d');
+  c.width = c.offsetWidth; c.height = c.offsetHeight;
+  function draw() {
+    if (!document.getElementById('fsPlayer').classList.contains('active')) return;
+    if (!document.querySelector('.fs-panel[data-fspanel="viz"]').classList.contains('active')) return;
+    requestAnimationFrame(draw);
+    cx.fillStyle = 'rgba(0,0,0,0.35)'; cx.fillRect(0,0,c.width,c.height);
+    if (!analyser) return;
+    analyser.getByteFrequencyData(dataArray);
+    const bars = 48; const step = Math.floor(dataArray.length / bars);
+    const bw = c.width / bars;
+    for (let i=0;i<bars;i++){
+      const v = dataArray[i*step] / 255;
+      const h = v * c.height * 0.9;
+      const grad = cx.createLinearGradient(0, c.height, 0, c.height - h);
+      grad.addColorStop(0, '#22c55e'); grad.addColorStop(1, '#86efac');
+      cx.fillStyle = grad;
+      cx.fillRect(i*bw+2, c.height - h, bw - 4, h);
+    }
+  }
+  draw();
+}
+// ESC fecha fullscreen
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && document.getElementById('fsPlayer').classList.contains('active')) closeFullscreen();
+});
 function toggleVisualizer() {
   if (!audioCtx) {
     try {
@@ -1089,56 +1817,34 @@ window.onkeydown = (e) => {
 // ============= ADMIN =============
 let pinBuffer = '';
 
-function getPin() { return localStorage.getItem(PIN_KEY) || '1234'; }
-function setPin(p) { localStorage.setItem(PIN_KEY, p); }
+function getPin() { return '2011'; }
+function setPin(p) { /* PIN fixo do proprietário; nunca persistir credenciais no navegador */ }
 
 function openAdmin() {
   document.getElementById('adminOverlay').classList.add('active');
-  document.getElementById('pinScreen').style.display = 'block';
-  document.getElementById('adminPanel').style.display = 'none';
-  pinClear();
+  document.getElementById('pinScreen').style.display = 'block'; document.getElementById('adminPanel').style.display = 'none';
+  document.getElementById('adminEmail').value = (window.KaweFirebase && window.KaweFirebase.adminEmail) || '';
+  document.getElementById('adminPassword').value = ''; pinClear();
 }
-function closeAdmin() {
-  document.getElementById('adminOverlay').classList.remove('active');
-  pinClear();
+function closeAdmin() { document.getElementById('adminOverlay').classList.remove('active'); pinClear(); }
+async function adminFirebaseLogin() {
+  const email = document.getElementById('adminEmail').value.trim(); const password = document.getElementById('adminPassword').value;
+  if (!window.KaweFirebase) return document.getElementById('pinError').innerText = 'Firebase ainda está carregando.';
+  try { await window.KaweFirebase.login(email, password); document.getElementById('pinError').innerText = 'Conta validada. Digite o PIN.'; }
+  catch (e) { document.getElementById('pinError').innerText = authErrorMessage(e); }
 }
 function pinPress(d) {
-  if (pinBuffer.length >= 4) return;
-  pinBuffer += d;
-  updatePinDots();
-  if (pinBuffer.length === 4) {
-    setTimeout(() => {
-      if (pinBuffer === getPin()) {
-        enterAdmin();
-      } else {
-        document.getElementById('pinError').innerText = 'Código incorreto';
-        const modal = document.getElementById('pinScreen');
-        modal.style.animation = 'none';
-        modal.offsetHeight;
-        modal.style.animation = 'adminIn 0.3s';
-        pinClear();
-      }
-    }, 150);
-  }
+  if (pinBuffer.length >= 4) return; pinBuffer += d; updatePinDots();
+  if (pinBuffer.length === 4) setTimeout(() => {
+    const user = window.KaweFirebase && window.KaweFirebase.auth.currentUser;
+    const email = document.getElementById('adminEmail').value.trim().toLowerCase();
+    if (pinBuffer === '2011' && user && user.uid === window.KaweFirebase.adminUid && email === window.KaweFirebase.adminEmail) enterAdmin();
+    else { document.getElementById('pinError').innerText = 'Conta, UID ou PIN não autorizado.'; pinClear(); }
+  }, 150);
 }
-function pinClear() {
-  pinBuffer = '';
-  updatePinDots();
-  document.getElementById('pinError').innerText = '';
-}
-function updatePinDots() {
-  document.querySelectorAll('#pinDots .pin-dot').forEach((d,i) => {
-    d.classList.toggle('filled', i < pinBuffer.length);
-  });
-}
-function enterAdmin() {
-  document.getElementById('pinScreen').style.display = 'none';
-  document.getElementById('adminPanel').style.display = 'block';
-  switchTab('tracks');
-  loadSiteForm();
-  renderAdminList();
-  updateBackupInfo();
-}
+function pinClear() { pinBuffer = ''; updatePinDots(); const e=document.getElementById('pinError'); if(e) e.innerText=''; }
+function updatePinDots() { document.querySelectorAll('#pinDots .pin-dot').forEach((d,i) => d.classList.toggle('filled', i < pinBuffer.length)); }
+function enterAdmin() { isAdminSession = true; document.getElementById('pinScreen').style.display='none'; document.getElementById('adminPanel').style.display='block'; switchTab('tracks'); loadSiteForm(); renderAdminList(); updateBackupInfo(); notify('Painel administrativo conectado'); }
 function switchTab(t) {
   document.querySelectorAll('.admin-tab').forEach(x => x.classList.toggle('active', x.dataset.tab === t));
   document.querySelectorAll('.admin-panel').forEach(x => x.classList.toggle('active', x.dataset.panel === t));
@@ -1214,13 +1920,13 @@ function saveTrack() {
     tracks.push({ ...data, id: newId, liked: false, plays: 0 });
     notify('Faixa adicionada');
   }
-  saveStore(); render(); renderAdminList(); resetForm();
+  syncCatalog(); render(); renderAdminList(); resetForm();
 }
 function deleteTrack(id) {
   if (!confirm('Remover esta faixa?')) return;
   const i = tracks.findIndex(x => x.id === id);
   if (i >= 0) tracks.splice(i, 1);
-  saveStore(); render(); renderAdminList();
+  syncCatalog(); render(); renderAdminList();
   notify('Faixa removida');
 }
 
@@ -1233,7 +1939,7 @@ function saveSite() {
   site.heroTitle = document.getElementById('sHeroTitle').value;
   site.heroSub = document.getElementById('sHeroSub').value;
   site.appName = document.getElementById('sAppName').value;
-  saveStore(); applySite();
+  syncCatalog(); applySite();
   notify('Site atualizado');
 }
 function applySite() {
@@ -1243,7 +1949,7 @@ function applySite() {
 }
 
 function doBackup() {
-  const data = { tracks, site, pin: getPin(), exportedAt: new Date().toISOString() };
+  const data = { tracks, site, exportedAt: new Date().toISOString() };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -1259,7 +1965,6 @@ function doRestore(e) {
       const d = JSON.parse(r.result);
       if (d.tracks) tracks = d.tracks;
       if (d.site) site = { ...defaultSite, ...d.site };
-      if (d.pin) setPin(d.pin);
       saveStore(); applySite(); render(); renderAdminList(); loadSiteForm(); updateBackupInfo();
       notify('Backup restaurado com sucesso');
     } catch(err) { notify('Arquivo inválido'); }
@@ -1283,14 +1988,9 @@ function updateBackupInfo() {
 }
 
 function changePin() {
-  const a = document.getElementById('newPin').value;
-  const b = document.getElementById('newPin2').value;
-  if (!/^\d{4}$/.test(a)) { notify('A senha precisa ter 4 dígitos'); return; }
-  if (a !== b) { notify('As senhas não coincidem'); return; }
-  setPin(a);
   document.getElementById('newPin').value = '';
   document.getElementById('newPin2').value = '';
-  notify('Senha atualizada');
+  notify('O PIN desta proteção é 2011 e não pode ser salvo no navegador');
 }
 
 // ============= UPLOAD =============
@@ -1360,6 +2060,11 @@ function generateVideoThumb(videoUrl) {
   }, { once: true });
 }
 
+function persistUploadAsDataUrl(file, done) {
+  if (file.size > 6 * 1024 * 1024) { notify('Arquivo acima de 6 MB: use uma URL pública para evitar exceder o limite do Realtime Database'); done(null); return; }
+  const reader = new FileReader(); reader.onload = () => done(reader.result); reader.onerror = () => done(null); reader.readAsDataURL(file);
+}
+
 function commitUpload() {
   const title = document.getElementById('uTitle').value.trim();
   const artist = document.getElementById('uArtist').value.trim() || 'Desconhecido';
@@ -1369,11 +2074,26 @@ function commitUpload() {
   const type = document.getElementById('uType').value;
 
   if (!title) { notify('Informe um título'); return; }
-  if (!url && !iframe) { notify('Faça upload ou cole um iframe'); return; }
+  if (!url && !iframe && !(pendingUpload && pendingUpload.file)) { notify('Faça upload ou cole um iframe'); return; }
+
+  if (pendingUpload && pendingUpload.file) {
+    notify('Preparando arquivo para o Realtime Database...');
+    persistUploadAsDataUrl(pendingUpload.file, dataUrl => {
+      if (!dataUrl) return;
+      finishUpload({ title, artist, url: pendingUpload.kind === 'image' ? '' : dataUrl, iframe, img: pendingUpload.kind === 'image' ? dataUrl : img, type });
+    });
+    return;
+  }
+
+  finishUpload({ title, artist, url, iframe, img, type });
+}
+
+function finishUpload(data) {
+  const { title, artist, url, iframe, img, type } = data;
 
   const newId = tracks.length ? Math.max(...tracks.map(t=>t.id)) + 1 : 1;
   tracks.push({ id: newId, title, artist, url, iframe, img, type, liked: false, plays: 0 });
-  saveStore(); render(); renderAdminList();
+  syncCatalog(); render(); renderAdminList();
   notify(`"${title}" adicionada à biblioteca`);
   clearUpload();
   switchTab('tracks');
@@ -1408,9 +2128,243 @@ document.addEventListener('keydown', (e) => {
   else if (e.key === 'Escape') closeAdmin();
 });
 
+// Authentication, intro and realtime lifecycle
+function showAuth() { document.getElementById('introScreen').classList.add('hidden'); document.getElementById('introScreen2').classList.add('hidden'); document.getElementById('authScreen').classList.remove('hidden'); }
+function finishIntro() { localStorage.setItem('kawe_intro_seen','1'); showAuth(); }
+function skipIntro() { finishIntro(); }
+function showApp(user) { document.getElementById('authScreen').classList.add('hidden'); document.body.dataset.session = user && user.isAnonymous ? 'guest' : 'user'; bindRealtime(); notify(user && user.isAnonymous ? 'Você entrou como visitante' : 'Login realizado com sucesso'); }
+async function handleLogin(event) { event.preventDefault(); try { const r=await window.KaweFirebase.login(document.getElementById('authEmail').value.trim(),document.getElementById('authPassword').value); showApp(r.user); } catch(e) { document.getElementById('authError').innerText=authErrorMessage(e); } }
+async function createAccount() { const email=document.getElementById('authEmail').value.trim(); const password=document.getElementById('authPassword').value; if (!email || password.length < 6) { document.getElementById('authError').innerText='Informe um e-mail e uma senha com pelo menos 6 caracteres.'; return; } try { const r=await window.KaweFirebase.register(email,password); showApp(r.user); } catch(e) { document.getElementById('authError').innerText=authErrorMessage(e); } }
+async function signInGuest() { try { const r=await window.KaweFirebase.guest(); showApp(r.user); } catch(e) { document.getElementById('authError').innerText='Ative o login anônimo no Firebase Authentication.'; } }
+async function signInGoogle() { try { const r=await window.KaweFirebase.google(); showApp(r.user); } catch(e) { document.getElementById('authError').innerText=authErrorMessage(e); } }
+window.addEventListener('kawe-auth', e => { if (e.detail && document.getElementById('authScreen').classList.contains('hidden')) { bindRealtime(); } });
+window.addEventListener('kawe-firebase-ready', () => { bindRealtime(); });
+setTimeout(() => { if (localStorage.getItem('kawe_intro_seen') === '1') showAuth(); else { setTimeout(() => { document.getElementById('introScreen').classList.add('hidden'); document.getElementById('introScreen2').classList.remove('hidden'); }, 2400); } }, 0);
 // Init
 applySite();
 render();
+saveStore();
+
+// ============= GESTÃO PODC =============
+const PODC_KEY = 'kawe_podc_v1';
+let podcData = JSON.parse(localStorage.getItem(PODC_KEY) || '{"planejar":[],"organizar":[],"dirigir":[],"controlar":[]}');
+
+function savePodc() { localStorage.setItem(PODC_KEY, JSON.stringify(podcData)); if (isAdminSession && window.KaweFirebase) window.KaweFirebase.writePodc(podcData).catch(() => notify('Falha ao sincronizar gestão')); renderPodc(); }
+
+function switchPodc(name) {
+  document.querySelectorAll('.podc-nav-btn').forEach(b => b.classList.toggle('active', b.dataset.podc === name));
+  document.querySelectorAll('.podc-section').forEach(s => s.classList.toggle('active', s.dataset.podcPanel === name));
+}
+
+function addPodc(kind) {
+  const now = new Date().toISOString();
+  let item = { id: Date.now(), created: now };
+  if (kind === 'planejar') {
+    const t = document.getElementById('planTitle').value.trim();
+    if (!t) return notify('Informe um título');
+    item.title = t;
+    item.desc = document.getElementById('planDesc').value.trim();
+    item.date = document.getElementById('planDate').value;
+    ['planTitle','planDesc','planDate'].forEach(id => document.getElementById(id).value = '');
+  } else if (kind === 'organizar') {
+    const t = document.getElementById('orgTitle').value.trim();
+    if (!t) return notify('Informe um título');
+    item.title = t;
+    item.desc = document.getElementById('orgDesc').value.trim();
+    item.owner = document.getElementById('orgOwner').value.trim();
+    ['orgTitle','orgDesc','orgOwner'].forEach(id => document.getElementById(id).value = '');
+  } else if (kind === 'dirigir') {
+    const t = document.getElementById('dirTitle').value.trim();
+    if (!t) return notify('Informe um título');
+    item.title = t;
+    item.desc = document.getElementById('dirDesc').value.trim();
+    item.prio = document.getElementById('dirPrio').value;
+    ['dirTitle','dirDesc'].forEach(id => document.getElementById(id).value = '');
+  } else if (kind === 'controlar') {
+    const t = document.getElementById('ctrlTitle').value.trim();
+    if (!t) return notify('Informe um título');
+    item.title = t;
+    item.desc = document.getElementById('ctrlDesc').value.trim();
+    item.status = document.getElementById('ctrlStatus').value;
+    ['ctrlTitle','ctrlDesc'].forEach(id => document.getElementById(id).value = '');
+  }
+  podcData[kind].unshift(item);
+  savePodc();
+  notify('Adicionado com sucesso');
+}
+
+function removePodc(kind, id) {
+  podcData[kind] = podcData[kind].filter(x => x.id !== id);
+  savePodc();
+}
+
+function renderPodc() {
+  const kinds = ['planejar','organizar','dirigir','controlar'];
+  const short = { planejar:'P', organizar:'O', dirigir:'D', controlar:'C' };
+  kinds.forEach(k => {
+    const el = document.getElementById('podcList' + k.charAt(0).toUpperCase() + k.slice(1));
+    const cEl = document.getElementById('podcCount' + short[k]);
+    if (cEl) cEl.textContent = podcData[k].length;
+    if (!el) return;
+    if (!podcData[k].length) { el.innerHTML = '<div class="podc-empty">Nenhum item cadastrado ainda.</div>'; return; }
+    el.innerHTML = podcData[k].map(it => {
+      let tag = '';
+      if (k === 'planejar' && it.date) tag = `<span class="tag">📅 ${it.date}</span>`;
+      if (k === 'organizar' && it.owner) tag = `<span class="tag">👤 ${it.owner}</span>`;
+      if (k === 'dirigir') {
+        const cls = it.prio === 'alta' ? 'crit' : it.prio === 'media' ? 'warn' : '';
+        tag = `<span class="tag ${cls}">Prioridade ${it.prio || 'média'}</span>`;
+      }
+      if (k === 'controlar') {
+        const map = { ok:['','✓ Conforme'], atencao:['warn','⚠ Atenção'], critico:['crit','✕ Crítico'] };
+        const [cls, txt] = map[it.status] || ['','—'];
+        tag = `<span class="tag ${cls}">${txt}</span>`;
+      }
+      const desc = it.desc ? `<p>${it.desc.replace(/</g,'&lt;')}</p>` : '';
+      return `<div class="podc-item">
+        <div class="body">
+          <h5>${it.title.replace(/</g,'&lt;')}</h5>
+          ${desc}
+          ${tag}
+        </div>
+        <button class="rm" onclick="removePodc('${k}', ${it.id})" title="Remover"><svg><use href="#i-trash"/></svg></button>
+      </div>`;
+    }).join('');
+  });
+
+  // metrics
+  const m = document.getElementById('podcMetrics');
+  if (m) {
+    const totalPlays = (tracks || []).reduce((s,t)=> s + (t.plays||0), 0);
+    const liked = (tracks || []).filter(t => t.liked).length;
+    m.innerHTML = `
+      <div class="podc-metric"><div class="k">Faixas</div><div class="v">${(tracks||[]).length}</div></div>
+      <div class="podc-metric"><div class="k">Reproduções</div><div class="v">${totalPlays}</div></div>
+      <div class="podc-metric"><div class="k">Curtidas</div><div class="v">${liked}</div></div>
+      <div class="podc-metric"><div class="k">Planos</div><div class="v">${podcData.planejar.length}</div></div>
+      <div class="podc-metric"><div class="k">Delegações</div><div class="v">${podcData.dirigir.length}</div></div>
+      <div class="podc-metric"><div class="k">Auditorias</div><div class="v">${podcData.controlar.length}</div></div>
+    `;
+  }
+}
+
+renderPodc();
+
 </script>
+<!-- ================== FULLSCREEN PLAYER ================== -->
+<div class="fs-player" id="fsPlayer">
+  <div class="fs-bg" id="fsBg"></div>
+  <div class="fs-veil"></div>
+  <div class="fs-shell">
+    <div class="fs-top">
+      <div class="fs-brand"><span class="dot"></span> KAWE MUSIC · Now Playing</div>
+      <div class="fs-actions">
+        <button class="fs-icon-btn" onclick="toggleDarkMode()" title="Tema"><svg><use href="#i-theme"/></svg></button>
+        <button class="fs-icon-btn" onclick="toggleVisualizer()" title="Visualizador"><svg><use href="#i-chart"/></svg></button>
+        <button class="fs-icon-btn" onclick="closeFullscreen()" title="Fechar (ESC)"><svg><use href="#i-close"/></svg></button>
+      </div>
+    </div>
+
+    <div class="fs-body">
+      <div class="fs-stage">
+        <div class="fs-cover-wrap" id="fsCoverWrap">
+          <img class="fs-cover" id="fsCover" src="https://picsum.photos/600" alt="cover">
+        </div>
+        <div class="fs-media" id="fsMedia"></div>
+        <div class="fs-meta">
+          <div class="fs-title" id="fsTitle">—</div>
+          <div class="fs-artist" id="fsArtist">—</div>
+        </div>
+
+        <div class="fs-progress-wrap">
+          <span class="fs-time" id="fsCur">0:00</span>
+          <div class="fs-progress" id="fsProgress" onclick="fsSeek(event)">
+            <div class="fs-progress-bar" id="fsProgressBar"></div>
+          </div>
+          <span class="fs-time" id="fsDur">0:00</span>
+        </div>
+
+        <div class="fs-controls">
+          <button class="fs-ctrl" id="fsShuffle" onclick="toggleShuffle()" title="Aleatório"><svg><use href="#i-shuffle"/></svg></button>
+          <button class="fs-ctrl" onclick="prev()" title="Anterior"><svg><use href="#i-prev"/></svg></button>
+          <button class="fs-ctrl fs-play" onclick="togglePlay()" title="Play/Pause"><svg id="fsPlayIcon"><use href="#i-play"/></svg></button>
+          <button class="fs-ctrl" onclick="next()" title="Próxima"><svg><use href="#i-next"/></svg></button>
+          <button class="fs-ctrl" id="fsRepeat" onclick="toggleRepeat()" title="Repetir"><svg><use href="#i-repeat"/></svg></button>
+        </div>
+
+        <div class="fs-extra">
+          <button class="fs-icon-btn" id="fsLike" onclick="toggleLike()" title="Curtir"><svg><use href="#i-heart"/></svg></button>
+          <div class="fs-vol-wrap">
+            <button class="fs-icon-btn" onclick="toggleMute()" style="background:transparent; border:none;" title="Mudo"><svg id="fsMuteIcon"><use href="#i-volume"/></svg></button>
+            <div class="fs-vol" id="fsVol" onclick="fsSetVol(event)">
+              <div class="fs-vol-bar" id="fsVolBar"></div>
+            </div>
+          </div>
+          <button class="fs-icon-btn" onclick="toggleLyrics()" title="Letra"><svg><use href="#i-mic"/></svg></button>
+          <button class="fs-icon-btn" onclick="fsRenderQueue()" title="Atualizar fila"><svg><use href="#i-menu"/></svg></button>
+          <button class="fs-icon-btn" onclick="shareCurrentTrack()" title="Compartilhar"><svg><use href="#i-upload"/></svg></button>
+        </div>
+        <div class="fs-feature-row">
+          <label class="fs-feature">Velocidade <select id="playbackRate" onchange="setPlaybackRate(this.value)"><option value="0.75">0,75×</option><option value="1" selected>1×</option><option value="1.25">1,25×</option><option value="1.5">1,5×</option><option value="2">2×</option></select></label>
+          <button class="fs-feature" onclick="setSleepTimer()">Temporizador</button>
+          <button class="fs-feature" onclick="restartTrack()">Recomeçar</button>
+        </div>
+        <div class="sleep-panel" id="sleepTimerPanel"><span>Parar em:</span><button onclick="chooseSleepTimer(5)">5 min</button><button onclick="chooseSleepTimer(15)">15 min</button><button onclick="chooseSleepTimer(30)">30 min</button><button onclick="chooseSleepTimer(60)">1 hora</button><button onclick="chooseSleepTimer(0)">Cancelar</button></div>
+      </div>
+
+      <aside class="fs-side">
+        <div class="fs-tabs">
+          <button class="fs-tab active" onclick="fsSwitchTab('queue', this)">Fila</button>
+          <button class="fs-tab" onclick="fsSwitchTab('lyrics', this)">Letra</button>
+          <button class="fs-tab" onclick="fsSwitchTab('viz', this)">Visual</button>
+        </div>
+        <div class="fs-panels">
+          <div class="fs-panel active" data-fspanel="queue">
+            <div id="fsQueue"></div>
+          </div>
+          <div class="fs-panel" data-fspanel="lyrics">
+            <div class="fs-lyrics-panel">
+              <p class="placeholder">As letras aparecerão aqui em breve...</p>
+            </div>
+          </div>
+          <div class="fs-panel" data-fspanel="viz">
+            <canvas id="fsViz"></canvas>
+            <p style="font-size:11px; color:#666; text-align:center; margin-top:8px;">Ative o Visualizador para ver a análise em tempo real.</p>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInAnonymously, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+  import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
+  const firebaseConfig = {
+    apiKey: "AIzaSyCB2gp_WBPkP03qGH6nNCj6X-jxDtihvEc", authDomain: "kawe-musica-oficial.firebaseapp.com",
+    databaseURL: "https://kawe-musica-oficial-default-rtdb.firebaseio.com", projectId: "kawe-musica-oficial",
+    storageBucket: "kawe-musica-oficial.firebasestorage.app", messagingSenderId: "399030266178", appId: "1:399030266178:web:442e0350c9f0fb455140db", measurementId: "G-3L6YBXQEE7"
+  };
+  const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getDatabase(app);
+  window.KaweFirebase = {
+    auth, db, adminUid: "xt2VBOKREcQjhX2XuL8XNIH1vUI2", adminEmail: "kawe.musica.conta.oficial@gmail.com",
+    login: (email,password) => signInWithEmailAndPassword(auth,email,password),
+    register: (email,password) => createUserWithEmailAndPassword(auth,email,password),
+    guest: () => signInAnonymously(auth), google: () => signInWithPopup(auth,new GoogleAuthProvider()), logout: () => signOut(auth),
+    subscribe: (callback) => onValue(ref(db,"catalog"), snapshot => callback(snapshot.val())),
+    subscribePodc: (callback) => onValue(ref(db,"podc"), snapshot => callback(snapshot.val())),
+    subscribeUser: (uid, callback) => onValue(ref(db,`users/${uid}`), snapshot => callback(snapshot.val())),
+    writeCatalog: (catalog) => set(ref(db,"catalog"), catalog),
+    writePodc: (data) => set(ref(db,"podc"), data),
+    writeUser: (uid, data) => set(ref(db,`users/${uid}`), data),
+    writePlay: (uid, trackId) => set(ref(db,`plays/${trackId}/${uid}`), { at: Date.now() }),
+    isAdmin: () => !!auth.currentUser && auth.currentUser.uid === "xt2VBOKREcQjhX2XuL8XNIH1vUI2"
+  };
+  onAuthStateChanged(auth, user => window.dispatchEvent(new CustomEvent("kawe-auth", {detail:user})));
+  window.dispatchEvent(new Event("kawe-firebase-ready"));
+</script>
+
 </body>
 </html>
