@@ -1061,11 +1061,11 @@ body.light-mode .player-bar {
   <div class="admin-modal" id="pinScreen">
     <div class="pin-lock-icon"><svg><use href="#i-lock"/></svg></div>
     <div class="pin-title">Acesso Administrativo</div>
-    <div class="pin-sub">Autentique sua conta Firebase e confirme o PIN de 4 dígitos.</div>
+    <div class="pin-sub">Autentique uma conta Firebase que possua a permissão administrativa.</div>
     <div class="form-row" style="display:block;text-align:left"><label style="display:block;margin-bottom:6px">E-mail do administrador</label><input id="adminEmail" type="email" autocomplete="username" placeholder="E-mail autorizado" style="width:100%;padding:11px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(34,197,94,.2);color:#fff"></div>
     <div class="form-row" style="display:block;text-align:left"><label style="display:block;margin-bottom:6px">Senha Firebase</label><input id="adminPassword" type="password" autocomplete="current-password" placeholder="Senha da conta Firebase" style="width:100%;padding:11px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(34,197,94,.2);color:#fff"></div>
     <button class="admin-btn primary" style="width:100%;justify-content:center;margin:5px 0 16px" onclick="adminFirebaseLogin()">Validar conta Firebase</button>
-    <div class="pin-sub" style="margin-bottom:10px">Depois, confirme o PIN local de segurança</div>
+    <div class="pin-sub" style="margin-bottom:10px">Confirme a sessão autenticada para entrar no painel</div>
     <div class="pin-dots" id="pinDots">
       <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
     </div>
@@ -1084,7 +1084,7 @@ body.light-mode .player-bar {
       <button class="pin-key" onclick="pinPress('0')">0</button>
       <button class="pin-key action" onclick="closeAdmin()">✕</button>
     </div>
-    <p style="font-size:11px; color:var(--muted); margin-top:8px;">PIN definido pelo proprietário: 4 dígitos</p>
+    <p style="font-size:11px; color:var(--muted); margin-top:8px;">A permissão administrativa é validada por custom claim no Firebase.</p>
   </div>
 
   <!-- MAIN ADMIN PANEL -->
@@ -1175,7 +1175,7 @@ body.light-mode .player-bar {
           <button class="admin-btn primary" onclick="commitUpload()"><svg><use href="#i-plus"/></svg> Adicionar à biblioteca</button>
           <button class="admin-btn ghost" onclick="clearUpload()"><svg><use href="#i-close"/></svg> Cancelar</button>
         </div>
-        <p style="font-size:11px; color:var(--muted); margin-top:12px;">⚠️ Arquivos locais funcionam durante a sessão (URL de objeto). Para uso permanente, hospede e cole a URL pública ou use um iframe.</p>
+        <p style="font-size:11px; color:var(--muted); margin-top:12px;">Os arquivos enviados são armazenados no Firebase Storage; o catálogo salva apenas os metadados e a URL.</p>
       </div>
     </div>
 
@@ -1310,7 +1310,7 @@ body.light-mode .player-bar {
 
     <!-- SECURITY TAB -->
     <div class="admin-panel" data-panel="security">
-      <div class="admin-section-title">Segurança do Admin</div><p style="color:var(--muted);font-size:13px;line-height:1.6">A senha do administrador é validada pelo Firebase Authentication. O PIN de confirmação desta tela permanece fixo em 2011 e não é salvo em localStorage.</p>
+      <div class="admin-section-title">Segurança do Admin</div><p style="color:var(--muted);font-size:13px;line-height:1.6">A senha é validada pelo Firebase Authentication e a permissão é controlada pelo custom claim <b>admin: true</b>. Nenhum PIN ou segredo é armazenado no navegador.</p>
       <div class="form-row"><label>Nova senha (4 dígitos)</label><input id="newPin" type="password" maxlength="4" pattern="\d{4}" placeholder="0000"></div>
       <div class="form-row"><label>Confirmar</label><input id="newPin2" type="password" maxlength="4" pattern="\d{4}" placeholder="0000"></div>
       <div class="admin-actions-row">
@@ -1817,20 +1817,20 @@ window.onkeydown = (e) => {
 // ============= ADMIN =============
 let pinBuffer = '';
 
-function getPin() { return '2011'; }
-function setPin(p) { /* PIN fixo do proprietário; nunca persistir credenciais no navegador */ }
+function getPin() { return null; }
+function setPin(p) { /* A autorização é feita por custom claim admin no Firebase. */ }
 
 function openAdmin() {
   document.getElementById('adminOverlay').classList.add('active');
   document.getElementById('pinScreen').style.display = 'block'; document.getElementById('adminPanel').style.display = 'none';
-  document.getElementById('adminEmail').value = (window.KaweFirebase && window.KaweFirebase.adminEmail) || '';
+  document.getElementById('adminEmail').value = window.KaweFirebase && window.KaweFirebase.auth.currentUser ? (window.KaweFirebase.auth.currentUser.email || '') : '';
   document.getElementById('adminPassword').value = ''; pinClear();
 }
 function closeAdmin() { document.getElementById('adminOverlay').classList.remove('active'); pinClear(); }
 async function adminFirebaseLogin() {
   const email = document.getElementById('adminEmail').value.trim(); const password = document.getElementById('adminPassword').value;
   if (!window.KaweFirebase) return document.getElementById('pinError').innerText = 'Firebase ainda está carregando.';
-  try { await window.KaweFirebase.login(email, password); document.getElementById('pinError').innerText = 'Conta validada. Digite o PIN.'; }
+  try { await window.KaweFirebase.login(email, password); document.getElementById('pinError').innerText = 'Conta autenticada. Confirme a sessão para verificar a permissão administrativa.'; }
   catch (e) { document.getElementById('pinError').innerText = authErrorMessage(e); }
 }
 function pinPress(d) {
@@ -1838,8 +1838,10 @@ function pinPress(d) {
   if (pinBuffer.length === 4) setTimeout(() => {
     const user = window.KaweFirebase && window.KaweFirebase.auth.currentUser;
     const email = document.getElementById('adminEmail').value.trim().toLowerCase();
-    if (pinBuffer === '2011' && user && user.uid === window.KaweFirebase.adminUid && email === window.KaweFirebase.adminEmail) enterAdmin();
-    else { document.getElementById('pinError').innerText = 'Conta, UID ou PIN não autorizado.'; pinClear(); }
+    window.KaweFirebase.isAdmin().then(ok => {
+      if (ok && user && email === (user.email || '').toLowerCase()) enterAdmin();
+      else { document.getElementById('pinError').innerText = 'Esta conta não possui a permissão administrativa.'; pinClear(); }
+    }).catch(() => { document.getElementById('pinError').innerText = 'Não foi possível validar a permissão administrativa.'; pinClear(); });
   }, 150);
 }
 function pinClear() { pinBuffer = ''; updatePinDots(); const e=document.getElementById('pinError'); if(e) e.innerText=''; }
@@ -1965,7 +1967,7 @@ function doRestore(e) {
       const d = JSON.parse(r.result);
       if (d.tracks) tracks = d.tracks;
       if (d.site) site = { ...defaultSite, ...d.site };
-      saveStore(); applySite(); render(); renderAdminList(); loadSiteForm(); updateBackupInfo();
+      saveStore(); if (isAdminSession) syncCatalog(); applySite(); render(); renderAdminList(); loadSiteForm(); updateBackupInfo();
       notify('Backup restaurado com sucesso');
     } catch(err) { notify('Arquivo inválido'); }
   };
@@ -1990,7 +1992,7 @@ function updateBackupInfo() {
 function changePin() {
   document.getElementById('newPin').value = '';
   document.getElementById('newPin2').value = '';
-  notify('O PIN desta proteção é 2011 e não pode ser salvo no navegador');
+  notify('A permissão administrativa é gerenciada pelo custom claim admin no Firebase.');
 }
 
 // ============= UPLOAD =============
@@ -2060,32 +2062,36 @@ function generateVideoThumb(videoUrl) {
   }, { once: true });
 }
 
-function persistUploadAsDataUrl(file, done) {
-  if (file.size > 6 * 1024 * 1024) { notify('Arquivo acima de 6 MB: use uma URL pública para evitar exceder o limite do Realtime Database'); done(null); return; }
-  const reader = new FileReader(); reader.onload = () => done(reader.result); reader.onerror = () => done(null); reader.readAsDataURL(file);
+async function persistUploadToStorage(file, kind, title) {
+  if (!window.KaweFirebase || !window.KaweFirebase.uploadMedia) throw new Error('Firebase Storage indisponível');
+  const safe = String(title || file.name).toLowerCase().replace(/[^a-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '');
+  const path = `media/${window.KaweFirebase.auth.currentUser.uid}/${Date.now()}-${safe || 'arquivo'}`;
+  return window.KaweFirebase.uploadMedia(file, path);
 }
 
-function commitUpload() {
+async function commitUpload() {
   const title = document.getElementById('uTitle').value.trim();
   const artist = document.getElementById('uArtist').value.trim() || 'Desconhecido';
-  const url = document.getElementById('uUrl').value.trim();
+  let url = document.getElementById('uUrl').value.trim();
   const iframe = document.getElementById('uIframe').value.trim();
-  const img = document.getElementById('uImg').value.trim() || `https://picsum.photos/400?r=${Date.now()}`;
+  let img = document.getElementById('uImg').value.trim() || `https://picsum.photos/400?r=${Date.now()}`;
   const type = document.getElementById('uType').value;
 
   if (!title) { notify('Informe um título'); return; }
   if (!url && !iframe && !(pendingUpload && pendingUpload.file)) { notify('Faça upload ou cole um iframe'); return; }
 
-  if (pendingUpload && pendingUpload.file) {
-    notify('Preparando arquivo para o Realtime Database...');
-    persistUploadAsDataUrl(pendingUpload.file, dataUrl => {
-      if (!dataUrl) return;
-      finishUpload({ title, artist, url: pendingUpload.kind === 'image' ? '' : dataUrl, iframe, img: pendingUpload.kind === 'image' ? dataUrl : img, type });
-    });
-    return;
+  try {
+    if (pendingUpload && pendingUpload.file) {
+      notify('Enviando arquivo para o Firebase Storage...');
+      const uploadedUrl = await persistUploadToStorage(pendingUpload.file, pendingUpload.kind, title);
+      if (pendingUpload.kind === 'image') img = uploadedUrl;
+      else url = uploadedUrl;
+    }
+    finishUpload({ title, artist, url, iframe, img, type });
+  } catch (error) {
+    console.error(error);
+    notify('Falha no upload. Verifique a permissão de administrador e o Storage.');
   }
-
-  finishUpload({ title, artist, url, iframe, img, type });
 }
 
 function finishUpload(data) {
@@ -2341,28 +2347,130 @@ renderPodc();
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
   import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInAnonymously, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
-  import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
+  import { getDatabase, ref, onValue, set, onDisconnect, serverTimestamp as rtdbServerTimestamp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
+  import { getFirestore, collection, doc, setDoc, getDocs, deleteDoc, onSnapshot, addDoc, writeBatch, serverTimestamp as firestoreServerTimestamp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+  import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-storage.js";
   const firebaseConfig = {
     apiKey: "AIzaSyCB2gp_WBPkP03qGH6nNCj6X-jxDtihvEc", authDomain: "kawe-musica-oficial.firebaseapp.com",
     databaseURL: "https://kawe-musica-oficial-default-rtdb.firebaseio.com", projectId: "kawe-musica-oficial",
     storageBucket: "kawe-musica-oficial.firebasestorage.app", messagingSenderId: "399030266178", appId: "1:399030266178:web:442e0350c9f0fb455140db", measurementId: "G-3L6YBXQEE7"
   };
-  const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getDatabase(app);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getDatabase(app);
+  const firestore = getFirestore(app);
+  const storage = getStorage(app);
+
+  async function hasAdminClaim() {
+    const user = auth.currentUser;
+    if (!user) return false;
+    const token = await user.getIdTokenResult();
+    return token.claims.admin === true;
+  }
+
   window.KaweFirebase = {
-    auth, db, adminUid: "xt2VBOKREcQjhX2XuL8XNIH1vUI2", adminEmail: "kawe.musica.conta.oficial@gmail.com",
+    auth, db, firestore, storage,
     login: (email,password) => signInWithEmailAndPassword(auth,email,password),
     register: (email,password) => createUserWithEmailAndPassword(auth,email,password),
     guest: () => signInAnonymously(auth), google: () => signInWithPopup(auth,new GoogleAuthProvider()), logout: () => signOut(auth),
-    subscribe: (callback) => onValue(ref(db,"catalog"), snapshot => callback(snapshot.val())),
-    subscribePodc: (callback) => onValue(ref(db,"podc"), snapshot => callback(snapshot.val())),
-    subscribeUser: (uid, callback) => onValue(ref(db,`users/${uid}`), snapshot => callback(snapshot.val())),
-    writeCatalog: (catalog) => set(ref(db,"catalog"), catalog),
-    writePodc: (data) => set(ref(db,"podc"), data),
-    writeUser: (uid, data) => set(ref(db,`users/${uid}`), data),
-    writePlay: (uid, trackId) => set(ref(db,`plays/${trackId}/${uid}`), { at: Date.now() }),
-    isAdmin: () => !!auth.currentUser && auth.currentUser.uid === "xt2VBOKREcQjhX2XuL8XNIH1vUI2"
+
+    // Firestore is the source of truth for permanent catalog content.
+    subscribe: (callback) => {
+      let catalog = [];
+      let site = null;
+      // Enquanto a coleção ainda não foi migrada, preserve o catálogo padrão local.
+      const emit = () => callback({ tracks: catalog.length ? catalog : null, site });
+      const unsubTracks = onSnapshot(collection(firestore, 'tracks'), snap => {
+        catalog = snap.docs.map(d => ({ id: Number(d.id) || d.id, ...d.data(), iframe: d.data().iframeHtml || '' }));
+        emit();
+      });
+      const unsubSite = onSnapshot(doc(firestore, 'site', 'config'), snap => {
+        site = snap.exists() ? snap.data() : null;
+        emit();
+      });
+      return () => { unsubTracks(); unsubSite(); };
+    },
+
+    subscribePodc: (callback) => onSnapshot(collection(firestore, 'podcItems'), snap => {
+      const grouped = { planejar: [], organizar: [], dirigir: [], controlar: [] };
+      snap.docs.forEach(d => {
+        const x = d.data();
+        const item = { id: Number(d.id) || d.id, title: x.title || '', desc: x.description || '', date: x.dueDate || '', owner: x.owner || '', prio: x.priority || 'media', status: x.status || 'ok', created: x.createdAt || null };
+        if (grouped[x.kind]) grouped[x.kind].push(item);
+      });
+      Object.values(grouped).forEach(list => list.sort((a,b) => String(b.created || '').localeCompare(String(a.created || ''))));
+      callback(grouped);
+    }),
+
+    subscribeUser: (uid, callback) => onSnapshot(doc(firestore, 'users', uid), snap => callback(snap.exists() ? snap.data() : null)),
+
+    writeCatalog: async (catalog) => {
+      const batch = writeBatch(firestore);
+      const existing = await getDocs(collection(firestore, 'tracks'));
+      const wanted = new Set((catalog.tracks || []).map(t => String(t.id)));
+      existing.docs.forEach(d => { if (!wanted.has(d.id)) batch.delete(d.ref); });
+      (catalog.tracks || []).forEach(t => {
+        const trackRef = doc(firestore, 'tracks', String(t.id));
+        batch.set(trackRef, {
+          title: String(t.title || ''), artist: String(t.artist || ''),
+          normalizedTitle: String(t.title || '').toLowerCase(), normalizedArtist: String(t.artist || '').toLowerCase(),
+          type: ['local','soundcloud','iframe','video'].includes(t.type) ? t.type : 'local',
+          mediaUrl: String(t.url || ''), iframeHtml: String(t.iframe || ''), coverUrl: String(t.img || ''),
+          lyrics: t.lyrics || null, durationSec: Number(t.durationSec || 0) || null,
+          published: t.published !== false, playsTotal: Number(t.plays || 0),
+          updatedAt: firestoreServerTimestamp(), updatedBy: auth.currentUser ? auth.currentUser.uid : null,
+          createdAt: t.createdAt || firestoreServerTimestamp(), createdBy: t.createdBy || (auth.currentUser ? auth.currentUser.uid : null)
+        }, { merge: true });
+      });
+      const siteRef = doc(firestore, 'site', 'config');
+      batch.set(siteRef, { ...(catalog.site || {}), updatedAt: firestoreServerTimestamp(), updatedBy: auth.currentUser ? auth.currentUser.uid : null }, { merge: true });
+      await batch.commit();
+    },
+
+    writePodc: async (data) => {
+      const batch = writeBatch(firestore);
+      const existing = await getDocs(collection(firestore, 'podcItems'));
+      existing.docs.forEach(d => batch.delete(d.ref));
+      Object.entries(data || {}).forEach(([kind, items]) => (items || []).forEach(item => {
+        const itemRef = doc(firestore, 'podcItems', String(item.id));
+        batch.set(itemRef, {
+          kind, title: String(item.title || ''), description: String(item.desc || ''),
+          dueDate: item.date || null, owner: item.owner || null, priority: item.prio || null, status: item.status || null,
+          createdAt: item.created || firestoreServerTimestamp(), updatedAt: firestoreServerTimestamp(),
+          createdBy: auth.currentUser ? auth.currentUser.uid : null
+        });
+      }));
+      await batch.commit();
+    },
+
+    writeUser: (uid, data) => setDoc(doc(firestore, 'users', uid), data, { merge: true }),
+    writePlay: (uid, trackId) => addDoc(collection(firestore, 'playEvents'), { uid, trackId: String(trackId), startedAt: firestoreServerTimestamp(), source: 'catalog' }),
+    isAdmin: hasAdminClaim,
+
+    // Realtime Database is reserved for transient, high-frequency state.
+    writePlayback: (uid, data) => set(ref(db, `playback/${uid}`), { uid, ...data, updatedAt: Date.now() }),
+    writePresence: async (uid, online) => {
+      const presenceRef = ref(db, `presence/${uid}`);
+      await set(presenceRef, { state: online ? 'online' : 'offline', lastChanged: Date.now() });
+      if (online) await onDisconnect(presenceRef).set({ state: 'offline', lastChanged: rtdbServerTimestamp() });
+    },
+    subscribePlayback: (uid, callback) => onValue(ref(db, `playback/${uid}`), snap => callback(snap.val())),
+
+    uploadMedia: async (file, path) => {
+      if (!(await hasAdminClaim())) throw new Error('admin-required');
+      const target = storageRef(storage, path);
+      await uploadBytes(target, file, { contentType: file.type || 'application/octet-stream' });
+      return getDownloadURL(target);
+    }
   };
-  onAuthStateChanged(auth, user => window.dispatchEvent(new CustomEvent("kawe-auth", {detail:user})));
+  onAuthStateChanged(auth, user => {
+    if (user) window.KaweFirebase.writePresence(user.uid, true).catch(() => {});
+    window.dispatchEvent(new CustomEvent("kawe-auth", {detail:user}));
+  });
+  window.addEventListener('beforeunload', () => {
+    const user = auth.currentUser;
+    if (user) set(ref(db, `presence/${user.uid}`), { state: 'offline', lastChanged: Date.now() }).catch(() => {});
+  });
   window.dispatchEvent(new Event("kawe-firebase-ready"));
 </script>
 
